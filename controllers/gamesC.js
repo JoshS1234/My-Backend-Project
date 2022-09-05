@@ -1,7 +1,13 @@
-const { getCategoryList } = require("../models/gamesM.js");
+const { getCategoryList, getUserList } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
   return getCategoryList().then((data) => {
+    res.status(200).send(data);
+  });
+};
+
+exports.getUsers = (req, res) => {
+  return getUserList().then((data) => {
     res.status(200).send(data);
   });
 };

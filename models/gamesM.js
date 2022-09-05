@@ -5,3 +5,9 @@ exports.getCategoryList = () => {
     return data.rows;
   });
 };
+
+exports.getUserList = () => {
+  return db.query("SELECT * FROM users").then((data) => {
+    return data.rows;
+  });
+};
