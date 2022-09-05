@@ -43,7 +43,6 @@ describe("GET /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then((res) => {
-        console.log(res.body);
         res.body.forEach((element) => {
           expect(element).toHaveProperty("slug", expect.any(String));
 
