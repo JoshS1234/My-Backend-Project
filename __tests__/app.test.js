@@ -118,7 +118,7 @@ describe("GET /api/reviews/:review_id", () => {
       });
   });
 
-  test("returns a 404 error if a review ID is requested that doesn't exist (non integer review ID)", () => {
+  test("returns a 400 error if a review ID is requested that doesn't exist (non integer review ID)", () => {
     return request(app).get("/api/reviews/blahhhash").expect(400);
   });
 
