@@ -10,7 +10,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  pool.end();
+  return pool.end();
 });
 
 /*
@@ -50,21 +50,5 @@ describe("GET /api/categories", () => {
           expect(element).toHaveProperty("description", expect.any(String));
         });
       });
-  });
-  test("Elements of array are objects with the correct properties and types", () => {
-    return request(app)
-      .get("/api/categories")
-      .expect(200)
-      .then((res) => {
-        console.log(res.body);
-        res.body.forEach((element) => {
-          expect(element).toHaveProperty("slug", expect.any(String));
-
-          expect(element).toHaveProperty("description", expect.any(String));
-        });
-      });
-  });
-  test("responds with a 404 error when there is a typo in the endpoint (so the endpoint doesn't exist", () => {
-    return request(app).get("/api/category").expect(404);
   });
 });
