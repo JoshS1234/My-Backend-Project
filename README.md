@@ -1,11 +1,17 @@
 ## How to use this repo
 
-If you are using this repo, you will need to include a ".env.test" file, which points towards the test dataset using PGDATABASE = "Blah"
+You will need to include a ".env.test" file, which points towards the test dataset. You will also need a ".env.development" file which points at the development dataset.
 
-You will also need a ".env.development" file, using PGDATABASE = "Blah blah"
+The .env.test file should look like
 
-An example is given below:
+'''
+PGDATABASE=nc_games_test
+'''
 
-Filename: .env.example
+The .env.development file should look like
 
-Contents: PGDATABASE=database_name_here
+'''
+PGDATABASE=nc_games
+'''
+
+There are several other files in the repo, please look through to see the functionality of them.
