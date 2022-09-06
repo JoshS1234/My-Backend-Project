@@ -43,7 +43,6 @@ exports.patchReviewVotesByID = (req, res, next) => {
 
 exports.getReviewListWithCommentCount = (req, res, next) => {
   let categoryObj = req.query;
-
   return getReviewListComments(categoryObj)
     .then((reviewList) => {
       res.status(200).send({ reviewList });

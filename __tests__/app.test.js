@@ -279,10 +279,21 @@ describe("get /api/reviews", () => {
       .get("/api/reviews?owner=mallionaire")
       .expect(200)
       .then((list) => {
-        console.log(list.body.reviewList);
         expect(list.body.reviewList.length).toBe(11);
         list.body.reviewList.forEach((element) => {
           expect(element.owner).toBe("mallionaire");
+        });
+      });
+  });
+  test("filters list on multiple given categories, correct number of objects returned and all fit the filter criterion", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&title=Agricola")
+      .expect(200)
+      .then((list) => {
+        expect(list.body.reviewList.length).toBe(1);
+        list.body.reviewList.forEach((element) => {
+          expect(element.owner).toBe("mallionaire");
+          expect(element.title).toBe("Agricola");
         });
       });
   });

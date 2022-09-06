@@ -27,7 +27,6 @@ exports.getSingleReviewByID = (reviewID) => {
         for (singleReview of reviews) {
           singleReview.comment_count = reviews.length;
         }
-        console.log(reviews);
         return { reviews };
       } else {
         return Promise.reject({
@@ -118,11 +117,9 @@ exports.getReviewListComments = (categoryObj) => {
       dbRequest = `SELECT * FROM reviews`;
 
       let count = 0;
-      console.log(categoryObj);
       for (key in categoryObj) {
         if (typeof categoryObj[key] === "string") {
           categoryObj[key] = `'${categoryObj[key]}'`;
-          console.log(categoryObj[key]);
         }
 
         if (count === 0) {
@@ -142,11 +139,10 @@ exports.getReviewListComments = (categoryObj) => {
         }
       }
       dbRequest += ` ORDER BY created_at DESC;`;
-      console.log(dbRequest);
+
       return db.query(dbRequest);
     })
     .then((updatedReviews) => {
-      console.log(updatedReviews);
       return updatedReviews.rows;
     });
 };
