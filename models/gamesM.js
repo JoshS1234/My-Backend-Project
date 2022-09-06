@@ -16,9 +16,6 @@ exports.getSingleReviewByID = (reviewID) => {
       } else {
         return Promise.reject({ status: 404, msg: "not present in database" });
       }
-    })
-    .catch((err) => {
-      return Promise.reject(err);
     });
 };
 

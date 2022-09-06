@@ -127,7 +127,7 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("Patch /api/reviews/:review_id", () => {
+describe("Patch /api/reviews/:review_id", () => {
   test("returns an object", () => {
     return request(app)
       .patch("/api/reviews/1")
@@ -148,7 +148,6 @@ describe.only("Patch /api/reviews/:review_id", () => {
       });
   });
   test("returns an error if a review ID is used that doesn't exist", () => {
-    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
       .patch("/api/reviews/1021340123109")
       .send({ inc_votes: 1 })
@@ -156,7 +155,6 @@ describe.only("Patch /api/reviews/:review_id", () => {
   });
 
   test("returns an error if a review ID is used that is invalid", () => {
-    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
       .patch("/api/reviews/asda")
       .send({ inc_votes: 1 })
@@ -164,7 +162,6 @@ describe.only("Patch /api/reviews/:review_id", () => {
   });
 
   test("returns an error if the vote ID is invalid", () => {
-    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
       .patch("/api/reviews/asda")
       .send({ inc_votes: "a" })
@@ -172,10 +169,13 @@ describe.only("Patch /api/reviews/:review_id", () => {
   });
 
   test("returns an error if the vote number is negative", () => {
-    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
       .patch("/api/reviews/asda")
       .send({ inc_votes: -1 })
       .expect(400);
+  });
+
+  test("returns an error if the vote number is missing", () => {
+    return request(app).patch("/api/reviews/1").expect(400);
   });
 });
