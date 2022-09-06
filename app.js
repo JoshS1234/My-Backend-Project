@@ -1,8 +1,10 @@
 const express = require("express");
-const { getCategories, getUsers,
+const {
+  getCategories,
+  getUsers,
   getReviewByID,
-  patchReviewVotesByID } = require(`${__dirname}/controllers/gamesC`);
-
+  patchReviewVotesByID,
+} = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
 app.use(express.json());
@@ -10,6 +12,7 @@ app.use(express.json());
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
+app.get("/api/users", getUsers);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
@@ -27,8 +30,6 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
-
-app.get("/api/users", getUsers);
 
 //error handling
 app.use((err, req, res, next) => {

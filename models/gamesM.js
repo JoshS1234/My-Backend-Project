@@ -23,12 +23,9 @@ exports.getSingleReviewByID = (reviewID) => {
     )
     .then((reviews) => {
       reviews = reviews.rows;
-      console.log(reviews);
       if (reviews.length > 0) {
         for (singleReview of reviews) {
-          console.log(singleReview);
           singleReview.comment_count = reviews.length;
-          console.log(singleReview);
         }
         console.log(reviews);
         return { reviews };
