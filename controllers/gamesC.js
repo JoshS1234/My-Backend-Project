@@ -1,10 +1,8 @@
 const {
   getCategoryList,
   getSingleReviewByID,
-  addReviewVotes,
   getUserList,
-  getSingleReviewByID,
-  addReviewVotes
+  addReviewVotes,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
