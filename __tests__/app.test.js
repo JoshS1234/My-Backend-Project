@@ -52,6 +52,31 @@ describe("GET /api/categories", () => {
   });
 });
 
+
+describe("GET /api/users", () => {
+  test("Elements of array are objects with the correct properties and types", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        res.body.users.forEach((element) => {
+          expect(element).toHaveProperty("username", expect.any(String));
+
+          expect(element).toHaveProperty("name", expect.any(String));
+
+          expect(element).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
+  });
+  test("Returned array has all of the users (is length 4)", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.users.length).toBe(4);
+      });
+  });
+  
 describe("GET /api/reviews/:review_id", () => {
   test("returns an array with length 1", () => {
     return request(app)
