@@ -52,7 +52,7 @@ describe("GET /api/categories", () => {
   });
 });
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
   test("returns an array from a get request at this endpoint", () => {
     return request(app)
       .get("/api/users")
