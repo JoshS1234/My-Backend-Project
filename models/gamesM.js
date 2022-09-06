@@ -6,6 +6,12 @@ exports.getCategoryList = () => {
   });
 };
 
+exports.getUserList = () => {
+  return db.query("SELECT * FROM users").then((users) => {
+    return users.rows;
+  });
+};
+
 exports.getSingleReviewByID = (reviewID) => {
   return db
     .query(`SELECT * FROM reviews WHERE review_id=$1;`, [reviewID])

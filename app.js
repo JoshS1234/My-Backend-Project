@@ -1,9 +1,8 @@
 const express = require("express");
-const {
-  getCategories,
+const { getCategories, getUsers,
   getReviewByID,
-  patchReviewVotesByID,
-} = require(`${__dirname}/controllers/gamesC`);
+  patchReviewVotesByID } = require(`${__dirname}/controllers/gamesC`);
+
 
 const app = express();
 app.use(express.json());
@@ -28,6 +27,8 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
+
+app.get("/api/users", getUsers);
 
 //error handling
 app.use((err, req, res, next) => {
