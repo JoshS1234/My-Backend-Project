@@ -7,7 +7,7 @@ exports.getCategories = (req, res) => {
 };
 
 exports.getUsers = (req, res) => {
-  return getUserList().then((data) => {
-    res.status(200).send(data);
+  return getUserList().then((users) => {
+    res.status(200).send({ users });
   });
 };

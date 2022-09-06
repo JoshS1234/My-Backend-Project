@@ -7,7 +7,7 @@ exports.getCategoryList = () => {
 };
 
 exports.getUserList = () => {
-  return db.query("SELECT * FROM users").then((data) => {
-    return data.rows;
+  return db.query("SELECT * FROM users").then((users) => {
+    return users.rows;
   });
 };
