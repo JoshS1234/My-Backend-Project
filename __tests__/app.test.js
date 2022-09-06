@@ -138,19 +138,7 @@ describe.only("Patch /api/reviews/:review_id", () => {
       });
   });
   test("returns an array with length 1", () => {
-    let checker = {
-      review_id: 1,
-      title: "Agricola",
-      designer: "Uwe Rosenberg",
-      owner: "mallionaire",
-      review_img_url:
-        "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-      review_body: "Farmyard fun!",
-      category: "euro game",
-      created_at: new Date(1610964020514),
-      votes: 1,
-    };
-
+    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
       .patch("/api/reviews/1")
       .send({ inc_votes: 34 })
@@ -159,14 +147,35 @@ describe.only("Patch /api/reviews/:review_id", () => {
         expect(res.body.votes).toBe(35);
       });
   });
-
-  test("returns an array with length 1", () => {
+  test("returns an error if a review ID is used that doesn't exist", () => {
+    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
     return request(app)
-      .patch("/api/reviews/11010101290")
-      .send({ inc_votes: 34 })
-      .expect(201)
-      .then((res) => {
-        expect(res.body.votes).toBe(35);
-      });
+      .patch("/api/reviews/1021340123109")
+      .send({ inc_votes: 1 })
+      .expect(400);
+  });
+
+  test("returns an error if a review ID is used that is invalid", () => {
+    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
+    return request(app)
+      .patch("/api/reviews/asda")
+      .send({ inc_votes: 1 })
+      .expect(400);
+  });
+
+  test("returns an error if the vote ID is invalid", () => {
+    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
+    return request(app)
+      .patch("/api/reviews/asda")
+      .send({ inc_votes: "a" })
+      .expect(400);
+  });
+
+  test("returns an error if the vote number is negative", () => {
+    //The starting votes at review ID 1 is 1, so if 34 are added it should be 35 at the end
+    return request(app)
+      .patch("/api/reviews/asda")
+      .send({ inc_votes: -1 })
+      .expect(400);
   });
 });

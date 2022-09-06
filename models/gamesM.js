@@ -23,6 +23,10 @@ exports.getSingleReviewByID = (reviewID) => {
 };
 
 exports.addReviewVotes = (reviewID, voteInc) => {
+  if (voteInc < 0) {
+    return Promise.reject({ status: 400, msg: "Votes must be positive" });
+  }
+
   return db
     .query(`SELECT * FROM reviews WHERE review_id=$1`, [reviewID])
     .then((data) => {
@@ -34,13 +38,11 @@ exports.addReviewVotes = (reviewID, voteInc) => {
           reviewID,
         ])
         .then((data) => {
-          console.log("added successfully");
           return db.query(`SELECT * FROM reviews WHERE review_id=$1`, [
             reviewID,
           ]);
         })
         .then((data) => {
-          console.log(data.rows);
           return data.rows[0];
         })
         .catch((err) => {

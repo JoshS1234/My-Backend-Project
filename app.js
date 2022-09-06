@@ -15,13 +15,18 @@ app.patch("/api/reviews/:review_id", patchReviewVotesByID);
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send(err.msg);
+  } else {
+    next(err);
   }
+});
 
-  let errorPSQLCodes = ["22P02"];
+app.use((err, req, res, next) => {
+  let errorPSQLCodes = ["22P02", "22003"];
   if (errorPSQLCodes.includes(err.code)) {
     res.status(400).send({ msg: "bad request" });
+  } else {
+    next(err);
   }
-  next(err);
 });
 
 //error handling
