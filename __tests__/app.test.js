@@ -76,8 +76,8 @@ describe("GET /api/users", () => {
         .get("/api/reviews/1")
         .expect(200)
         .then((res) => {
-          expect(res.body).toBeInstanceOf(Array);
-          expect(res.body.length).toBe(1);
+          expect(res.body.reviews).toBeInstanceOf(Array);
+          expect(res.body.reviews.length).toBe(1);
         });
     });
 
@@ -86,7 +86,7 @@ describe("GET /api/users", () => {
         .get("/api/reviews/1")
         .expect(200)
         .then((res) => {
-          let returnedObj = res.body[0];
+          let returnedObj = res.body.reviews[0];
           expect(returnedObj).toHaveProperty("review_id", expect.any(Number));
 
           expect(returnedObj).toHaveProperty("title", expect.any(String));
@@ -128,9 +128,9 @@ describe("GET /api/users", () => {
         .then((res) => {
           for (key in checker) {
             if (key !== "created_at") {
-              expect(checker[key]).toBe(res.body[0][key]);
+              expect(checker[key]).toBe(res.body.reviews[0][key]);
             } else {
-              expect(checker[key]).toEqual(new Date(res.body[0][key]));
+              expect(checker[key]).toEqual(new Date(res.body.reviews[0][key]));
             }
           }
         });
@@ -143,6 +143,39 @@ describe("GET /api/users", () => {
     test("returns a 404 error if a review ID is requested that doesn't exist (numerical ID requested, but doesn't exist in the data)", () => {
       return request(app).get("/api/reviews/109800").expect(404);
     });
+  });
+
+  //////////////First task ^
+
+  test("the returned object includes a comment_count key", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviews[0]).toHaveProperty("comment_count");
+      });
+  });
+  test("returned object's comment count is a number", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviews[0]).toHaveProperty(
+          "comment_count",
+          expect.any(Number)
+        );
+      });
+  });
+  test("Also works when the comment count is 0 (like user 1)", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviews[0]).toHaveProperty(
+          "comment_count",
+          expect.any(Number)
+        );
+      });
   });
 });
 
