@@ -128,11 +128,13 @@ describe("GET /api/users", () => {
         .then((res) => {
           for (key in checker) {
             if (key !== "created_at") {
+              console.log(key, res.body.reviews[0][key]);
               expect(checker[key]).toBe(res.body.reviews[0][key]);
             } else {
               expect(checker[key]).toEqual(new Date(res.body.reviews[0][key]));
             }
           }
+          expect(res.body.reviews[0].comment_count).toBe(1);
         });
     });
 
