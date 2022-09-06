@@ -14,13 +14,29 @@ exports.getUserList = () => {
 
 exports.getSingleReviewByID = (reviewID) => {
   return db
-    .query(`SELECT * FROM reviews WHERE review_id=$1;`, [reviewID])
-    .then((data) => {
-      data = data.rows;
-      if (data.length > 0) {
-        return data;
+    .query(
+      `SELECT reviews.review_id, review_body, title, designer, review_img_url, reviews.votes, category, owner, reviews.created_at FROM reviews 
+      LEFT JOIN comments 
+      ON comments.review_id=reviews.review_id 
+      WHERE reviews.review_id=$1`,
+      [reviewID]
+    )
+    .then((reviews) => {
+      reviews = reviews.rows;
+      console.log(reviews);
+      if (reviews.length > 0) {
+        for (singleReview of reviews) {
+          console.log(singleReview);
+          singleReview.comment_count = reviews.length;
+          console.log(singleReview);
+        }
+        console.log(reviews);
+        return { reviews };
       } else {
-        return Promise.reject({ status: 404, msg: "not present in database" });
+        return Promise.reject({
+          status: 404,
+          msg: "not present in database",
+        });
       }
     });
 };
