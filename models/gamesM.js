@@ -66,3 +66,87 @@ exports.addReviewVotes = (reviewID, voteInc) => {
         });
     });
 };
+
+exports.getReviewListComments = (categoryObj) => {
+  validCategories = [
+    "review_id",
+    "owner",
+    "title",
+    "category",
+    "review_img_url",
+    "created_at",
+    "votes",
+    "designer",
+    "comment_count",
+  ];
+  return db
+    .query(
+      `SELECT users.username, COUNT(reviews.owner) FROM reviews 
+  JOIN users
+  ON reviews.owner = users.username
+  GROUP BY users.username;`
+    )
+    .then((countObj) => {
+      countObj = countObj.rows;
+      let countObj2 = {};
+      countObj.forEach((user) => {
+        countObj2[user.username] = user.count;
+      });
+      return Promise.all([
+        db.query(`ALTER TABLE reviews
+      ADD comment_count INT;
+      `),
+        countObj2,
+      ]);
+    })
+    .then((promise) => {
+      let countObj = promise[1];
+      let promiseArr = [];
+      for (owner in countObj) {
+        promiseArr.push(
+          db.query(
+            `UPDATE reviews
+            SET comment_count=$1 
+            WHERE owner=$2;`,
+            [countObj[owner], owner]
+          )
+        );
+      }
+      return Promise.all(promiseArr);
+    })
+    .then(() => {
+      dbRequest = `SELECT * FROM reviews`;
+
+      let count = 0;
+      console.log(categoryObj);
+      for (key in categoryObj) {
+        if (typeof categoryObj[key] === "string") {
+          categoryObj[key] = `'${categoryObj[key]}'`;
+          console.log(categoryObj[key]);
+        }
+
+        if (count === 0) {
+          if (validCategories.includes(key)) {
+            dbRequest += ` WHERE ${key}=${categoryObj[key]}`;
+          } else {
+            return Promise.reject({ status: 400, msg: "not a valid category" });
+          }
+          count++;
+        } else {
+          if (validCategories.includes(key)) {
+            dbRequest += ` AND ${key}=${categoryObj[key]}`;
+          } else {
+            return Promise.reject({ status: 400, msg: "not a valid category" });
+          }
+          count++;
+        }
+      }
+      dbRequest += ` ORDER BY created_at DESC;`;
+      console.log(dbRequest);
+      return db.query(dbRequest);
+    })
+    .then((updatedReviews) => {
+      console.log(updatedReviews);
+      return updatedReviews.rows;
+    });
+};
