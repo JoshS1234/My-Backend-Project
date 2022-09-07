@@ -297,4 +297,21 @@ describe("get /api/reviews?category=<categoryName>", () => {
         });
       });
   });
+
+  test("returns an empty array with a 200 status even when it is an empty array answer", () => {
+    return request(app)
+      .get("/api/reviews?owner=malli")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviewList).toEqual([]);
+      });
+  });
+  test("returns a 404 error if the requested category is invalid", () => {
+    return request(app)
+      .get("/api/reviews?ownedBy=malli")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not a valid topic");
+      });
+  });
 });

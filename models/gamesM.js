@@ -81,6 +81,7 @@ exports.getReviewListComments = (categoryObj) => {
 
   let queryStr = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(reviews.review_id) AS comment_count FROM comments 
 FULL JOIN reviews ON reviews.review_id = comments.review_id `;
+  let validKey = true;
 
   if (Object.keys(categoryObj).length > 0) {
     let count = 0;
@@ -92,16 +93,23 @@ FULL JOIN reviews ON reviews.review_id = comments.review_id `;
           queryStr += `AND ${key} = '${categoryObj[key]}' `;
         }
         count++;
+      } else {
+        validKey = false;
       }
     }
   }
+
   queryStr += `GROUP BY reviews.review_id ORDER BY created_at DESC;`;
 
-  return db.query(queryStr).then((data) => {
-    let output = data.rows.map((element) => {
-      element.comment_count = Number(element.comment_count);
-      return element;
+  if (validKey === true) {
+    return db.query(queryStr).then((data) => {
+      let output = data.rows.map((element) => {
+        element.comment_count = Number(element.comment_count);
+        return element;
+      });
+      return output;
     });
-    return output;
-  });
+  } else {
+    return Promise.reject({ status: 404, msg: "not a valid topic" });
+  }
 };
