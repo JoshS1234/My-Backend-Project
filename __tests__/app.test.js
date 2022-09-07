@@ -233,12 +233,12 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
-  test("returns an array and a 200 status", () => {
-    request(app)
-      .get("/api/reviews/3/comments")
-      .then((data) => {
-        expect("a").toBe("b");
-      });
-  });
-});
+// describe.only("GET /api/reviews/:review_id/comments", () => {
+//   test("returns an array and a 200 status", () => {
+//     request(app)
+//       .get("/api/reviews/3/comments")
+//       .then((data) => {
+//         expect("a").toBe("b");
+//       });
+//   });
+// });
