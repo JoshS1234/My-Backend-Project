@@ -66,66 +66,6 @@ exports.addReviewVotes = (reviewID, voteInc) => {
     });
 };
 
-// exports.getReviewListComments = (categoryObj) => {
-//   validKeys = [
-//     "review_id",
-//     "owner",
-//     "title",
-//     "category",
-//     "review_img_url",
-//     "created_at",
-//     "votes",
-//     "designer",
-//     "comment_count",
-//   ];
-//
-//   return db
-//     .query(
-//       "SELECT review_id, COUNT(review_id) FROM comments GROUP BY review_id"
-//     )
-//     .then((data) => {
-//       let countData = data.rows;
-//       return Promise.all(countData);
-//     })
-//     .then((countData) => {
-//       let queryStr = `SELECT * FROM reviews `;
-// if (Object.keys(categoryObj).length > 0) {
-//   let count = 0;
-//   for (key in categoryObj) {
-//     if (validKeys.includes(key)) {
-//       if (count === 0) {
-//         queryStr += `WHERE ${key} = '${categoryObj[key]}' `;
-//       } else {
-//         queryStr += `AND ${key} = '${categoryObj[key]}' `;
-//       }
-//       count++;
-//     }
-//   }
-// }
-//       queryStr += `ORDER BY created_at DESC;`;
-//       return Promise.all([db.query(queryStr), countData]);
-//     })
-//     .then((promiseArr) => {
-//       let reviewArr = promiseArr[0].rows;
-//       let countObj = promiseArr[1];
-
-//       countObj2 = {};
-//       for (element of countObj) {
-//         countObj2[element.review_id] = element.count;
-//       }
-
-//       let outputReviews = reviewArr.map((review) => {
-//         if (countObj2[review.review_id]) {
-//           review.comment_count = Number(countObj2[review.review_id]);
-//         } else {
-//           review.comment_count = 0;
-//         }
-//         return review;
-//       });
-//       return outputReviews;
-//     });
-// };
-
 exports.getReviewListComments = (categoryObj) => {
   validKeys = [
     "review_id",
