@@ -67,7 +67,7 @@ exports.addReviewVotes = (reviewID, voteInc) => {
 };
 
 exports.getReviewListComments = (categoryObj) => {
-  validCategories = [
+  validKeys = [
     "review_id",
     "owner",
     "title",
@@ -78,71 +78,50 @@ exports.getReviewListComments = (categoryObj) => {
     "designer",
     "comment_count",
   ];
+
   return db
     .query(
-      `SELECT users.username, COUNT(reviews.owner) FROM reviews 
-  JOIN users
-  ON reviews.owner = users.username
-  GROUP BY users.username;`
+      "SELECT review_id, COUNT(review_id) FROM comments GROUP BY review_id"
     )
-    .then((countObj) => {
-      countObj = countObj.rows;
-      let countObj2 = {};
-      countObj.forEach((user) => {
-        countObj2[user.username] = user.count;
-      });
-      return Promise.all([
-        db.query(`ALTER TABLE reviews
-      ADD comment_count INT;
-      `),
-        countObj2,
-      ]);
+    .then((data) => {
+      let countData = data.rows;
+      return Promise.all(countData);
     })
-    .then((promise) => {
-      let countObj = promise[1];
-      let promiseArr = [];
-      for (owner in countObj) {
-        promiseArr.push(
-          db.query(
-            `UPDATE reviews
-            SET comment_count=$1 
-            WHERE owner=$2;`,
-            [countObj[owner], owner]
-          )
-        );
-      }
-      return Promise.all(promiseArr);
-    })
-    .then(() => {
-      dbRequest = `SELECT * FROM reviews`;
-
-      let count = 0;
-      for (key in categoryObj) {
-        if (typeof categoryObj[key] === "string") {
-          categoryObj[key] = `'${categoryObj[key]}'`;
-        }
-
-        if (count === 0) {
-          if (validCategories.includes(key)) {
-            dbRequest += ` WHERE ${key}=${categoryObj[key]}`;
-          } else {
-            return Promise.reject({ status: 400, msg: "not a valid category" });
+    .then((countData) => {
+      let queryStr = `SELECT * FROM reviews `;
+      if (Object.keys(categoryObj).length > 0) {
+        let count = 0;
+        for (key in categoryObj) {
+          if (validKeys.includes(key)) {
+            if (count === 0) {
+              queryStr += `WHERE ${key} = '${categoryObj[key]}' `;
+            } else {
+              queryStr += `AND ${key} = '${categoryObj[key]}' `;
+            }
+            count++;
           }
-          count++;
+        }
+      }
+      queryStr += `ORDER BY created_at DESC;`;
+      return Promise.all([db.query(queryStr), countData]);
+    })
+    .then((promiseArr) => {
+      let reviewArr = promiseArr[0].rows;
+      let countObj = promiseArr[1];
+
+      countObj2 = {};
+      for (element of countObj) {
+        countObj2[element.review_id] = element.count;
+      }
+
+      let outputReviews = reviewArr.map((review) => {
+        if (countObj2[review.review_id]) {
+          review.comment_count = Number(countObj2[review.review_id]);
         } else {
-          if (validCategories.includes(key)) {
-            dbRequest += ` AND ${key}=${categoryObj[key]}`;
-          } else {
-            return Promise.reject({ status: 400, msg: "not a valid category" });
-          }
-          count++;
+          review.comment_count = 0;
         }
-      }
-      dbRequest += ` ORDER BY created_at DESC;`;
-
-      return db.query(dbRequest);
-    })
-    .then((updatedReviews) => {
-      return updatedReviews.rows;
+        return review;
+      });
+      return outputReviews;
     });
 };
