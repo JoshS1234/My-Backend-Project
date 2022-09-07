@@ -66,6 +66,66 @@ exports.addReviewVotes = (reviewID, voteInc) => {
     });
 };
 
+// exports.getReviewListComments = (categoryObj) => {
+//   validKeys = [
+//     "review_id",
+//     "owner",
+//     "title",
+//     "category",
+//     "review_img_url",
+//     "created_at",
+//     "votes",
+//     "designer",
+//     "comment_count",
+//   ];
+//
+//   return db
+//     .query(
+//       "SELECT review_id, COUNT(review_id) FROM comments GROUP BY review_id"
+//     )
+//     .then((data) => {
+//       let countData = data.rows;
+//       return Promise.all(countData);
+//     })
+//     .then((countData) => {
+//       let queryStr = `SELECT * FROM reviews `;
+// if (Object.keys(categoryObj).length > 0) {
+//   let count = 0;
+//   for (key in categoryObj) {
+//     if (validKeys.includes(key)) {
+//       if (count === 0) {
+//         queryStr += `WHERE ${key} = '${categoryObj[key]}' `;
+//       } else {
+//         queryStr += `AND ${key} = '${categoryObj[key]}' `;
+//       }
+//       count++;
+//     }
+//   }
+// }
+//       queryStr += `ORDER BY created_at DESC;`;
+//       return Promise.all([db.query(queryStr), countData]);
+//     })
+//     .then((promiseArr) => {
+//       let reviewArr = promiseArr[0].rows;
+//       let countObj = promiseArr[1];
+
+//       countObj2 = {};
+//       for (element of countObj) {
+//         countObj2[element.review_id] = element.count;
+//       }
+
+//       let outputReviews = reviewArr.map((review) => {
+//         if (countObj2[review.review_id]) {
+//           review.comment_count = Number(countObj2[review.review_id]);
+//         } else {
+//           review.comment_count = 0;
+//         }
+//         return review;
+//       });
+//       return outputReviews;
+//     });
+// };
+
 exports.getReviewListComments = (categoryObj) => {
   validKeys = [
     "review_id",
@@ -79,49 +139,29 @@ exports.getReviewListComments = (categoryObj) => {
     "comment_count",
   ];
 
-  return db
-    .query(
-      "SELECT review_id, COUNT(review_id) FROM comments GROUP BY review_id"
-    )
-    .then((data) => {
-      let countData = data.rows;
-      return Promise.all(countData);
-    })
-    .then((countData) => {
-      let queryStr = `SELECT * FROM reviews `;
-      if (Object.keys(categoryObj).length > 0) {
-        let count = 0;
-        for (key in categoryObj) {
-          if (validKeys.includes(key)) {
-            if (count === 0) {
-              queryStr += `WHERE ${key} = '${categoryObj[key]}' `;
-            } else {
-              queryStr += `AND ${key} = '${categoryObj[key]}' `;
-            }
-            count++;
-          }
-        }
-      }
-      queryStr += `ORDER BY created_at DESC;`;
-      return Promise.all([db.query(queryStr), countData]);
-    })
-    .then((promiseArr) => {
-      let reviewArr = promiseArr[0].rows;
-      let countObj = promiseArr[1];
+  let queryStr = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(reviews.review_id) AS comment_count FROM comments 
+FULL JOIN reviews ON reviews.review_id = comments.review_id `;
 
-      countObj2 = {};
-      for (element of countObj) {
-        countObj2[element.review_id] = element.count;
-      }
-
-      let outputReviews = reviewArr.map((review) => {
-        if (countObj2[review.review_id]) {
-          review.comment_count = Number(countObj2[review.review_id]);
+  if (Object.keys(categoryObj).length > 0) {
+    let count = 0;
+    for (key in categoryObj) {
+      if (validKeys.includes(key)) {
+        if (count === 0) {
+          queryStr += `WHERE ${key} = '${categoryObj[key]}' `;
         } else {
-          review.comment_count = 0;
+          queryStr += `AND ${key} = '${categoryObj[key]}' `;
         }
-        return review;
-      });
-      return outputReviews;
+        count++;
+      }
+    }
+  }
+  queryStr += `GROUP BY reviews.review_id ORDER BY created_at DESC;`;
+
+  return db.query(queryStr).then((data) => {
+    let output = data.rows.map((element) => {
+      element.comment_count = Number(element.comment_count);
+      return element;
     });
+    return output;
+  });
 };
