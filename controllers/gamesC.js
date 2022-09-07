@@ -3,6 +3,7 @@ const {
   getSingleReviewByID,
   getUserList,
   addReviewVotes,
+  getCommentArrayForReview,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
@@ -37,5 +38,18 @@ exports.patchReviewVotesByID = (req, res, next) => {
     })
     .catch((err) => {
       next(err);
+    });
+};
+
+exports.getCommentsFromReview = () => {
+  console.log("in the controller");
+
+  return getCommentArrayForReview()
+    .then((data) => {
+      console.log(data);
+      res.status(200);
+    })
+    .catch((err) => {
+      return Promise.reject(err);
     });
 };

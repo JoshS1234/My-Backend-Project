@@ -232,3 +232,13 @@ describe("Patch /api/reviews/:review_id", () => {
     return request(app).patch("/api/reviews/1").expect(400);
   });
 });
+
+describe.only("GET /api/reviews/:review_id/comments", () => {
+  test("returns an array and a 200 status", () => {
+    request(app)
+      .get("/api/reviews/3/comments")
+      .then((data) => {
+        expect("a").toBe("b");
+      });
+  });
+});

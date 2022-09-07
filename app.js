@@ -4,6 +4,8 @@ const {
   getUsers,
   getReviewByID,
   patchReviewVotesByID,
+
+  getCommentsFromReview,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -13,6 +15,7 @@ app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
 app.get("/api/users", getUsers);
+app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
