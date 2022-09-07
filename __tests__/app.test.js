@@ -232,3 +232,86 @@ describe("Patch /api/reviews/:review_id", () => {
     return request(app).patch("/api/reviews/1").expect(400);
   });
 });
+
+describe("get /api/reviews?category=<categoryName>", () => {
+  test("returns an array of objects", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviewList).toBeInstanceOf(Array);
+        res.body.reviewList.forEach((element) => {
+          expect(element).toBeInstanceOf(Object);
+        });
+      });
+  });
+  test("returns an array of objects with the correct properties", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((res) => {
+        let objArr = res.body.reviewList;
+        for (element of objArr) {
+          expect(element).toHaveProperty("review_id", expect.any(Number));
+          expect(element).toHaveProperty("owner", expect.any(String));
+          expect(element).toHaveProperty("title", expect.any(String));
+          expect(element).toHaveProperty("category", expect.any(String));
+          expect(element).toHaveProperty("review_img_url", expect.any(String));
+          expect(element).toHaveProperty("created_at", expect.any(String));
+          expect(element).toHaveProperty("votes", expect.any(Number));
+          expect(element).toHaveProperty("designer", expect.any(String));
+          expect(element).toHaveProperty("comment_count", expect.any(Number));
+        }
+      });
+  });
+  test("Objects are sorted in descending date order by default", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviewList).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("filters list on a given category, correct number of objects returned and all fit the filter criterion", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire")
+      .expect(200)
+      .then((list) => {
+        expect(list.body.reviewList.length).toBe(11);
+        list.body.reviewList.forEach((element) => {
+          expect(element.owner).toBe("mallionaire");
+        });
+      });
+  });
+  test("filters list on multiple given categories, correct number of objects returned and all fit the filter criterion", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&title=Agricola")
+      .expect(200)
+      .then((list) => {
+        expect(list.body.reviewList.length).toBe(1);
+        list.body.reviewList.forEach((element) => {
+          expect(element.owner).toBe("mallionaire");
+          expect(element.title).toBe("Agricola");
+        });
+      });
+  });
+
+  test("returns an empty array with a 200 status even when it is an empty array answer", () => {
+    return request(app)
+      .get("/api/reviews?owner=malli")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.reviewList).toEqual([]);
+      });
+  });
+  test("returns a 404 error if the requested category is invalid", () => {
+    return request(app)
+      .get("/api/reviews?ownedBy=malli")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not a valid topic");
+      });
+  });
+});
