@@ -233,7 +233,7 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
-describe("get /api/reviews?category=blah", () => {
+describe("get /api/reviews?category=<categoryName>", () => {
   test("returns an array of objects", () => {
     return request(app)
       .get("/api/reviews")
