@@ -2,7 +2,6 @@ const pool = require(`${__dirname}/../db/connection`);
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
-const { reduce } = require("../db/data/test-data/categories");
 const app = require(`${__dirname}/../app`);
 
 beforeEach(() => {
