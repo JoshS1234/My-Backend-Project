@@ -4,7 +4,7 @@ const {
   getUserList,
   addReviewVotes,
   getCommentsArrayForReview,
-  postCommentToSpecificReview
+  postCommentToSpecificReview,
   getReviewListComments,
 } = require("../models/gamesM.js");
 

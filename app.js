@@ -4,10 +4,9 @@ const {
   getUsers,
   getReviewByID,
   patchReviewVotesByID,
-
   getCommentsFromReview,
-  postCommentToReview
-  getReviewListWithCommentCount,
+  postCommentToReview,
+  getReviewListWithCommentCount
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();

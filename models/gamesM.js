@@ -143,7 +143,7 @@ FULL JOIN reviews ON reviews.review_id = comments.review_id `;
 //       });
 // };
 exports.postCommentToSpecificReview = (reviewID, objToPost) => {
-  console.log(typeof objToPost.username)
+
   
   return db
     .query(
