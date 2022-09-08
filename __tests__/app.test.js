@@ -2,8 +2,7 @@ const pool = require(`${__dirname}/../db/connection`);
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
-const { reduce } = require("../db/data/test-data/categories");
-const { expect } = require("@jest/globals");
+
 const app = require(`${__dirname}/../app`);
 
 beforeEach(() => {
@@ -234,6 +233,7 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
+
 describe("GET /api/reviews/:review_id/comments", () => {
   test("returns an array of objects and a 200 status", () => {
     return request(app)
@@ -299,5 +299,6 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .then((res)=>{
         expect(res.body.comments).toEqual(correct)
       })
+
   });
 });

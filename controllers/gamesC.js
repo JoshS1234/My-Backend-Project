@@ -4,6 +4,7 @@ const {
   getUserList,
   addReviewVotes,
   getCommentsArrayForReview,
+  getReviewListComments,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
@@ -41,9 +42,20 @@ exports.patchReviewVotesByID = (req, res, next) => {
     });
 };
 
+
 exports.getCommentsFromReview = (req, res) => {
   let reviewID = req.params.review_id
   return getCommentsArrayForReview(reviewID).then((data) => {
     res.status(200).send({comments:data});
   });
+};
+exports.getReviewListWithCommentCount = (req, res, next) => {
+  let categoryObj = req.query;
+  return getReviewListComments(categoryObj)
+    .then((reviewList) => {
+      res.status(200).send({ reviewList });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
