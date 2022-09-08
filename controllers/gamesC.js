@@ -44,6 +44,6 @@ exports.patchReviewVotesByID = (req, res, next) => {
 exports.getCommentsFromReview = (req, res) => {
   let reviewID = req.params.review_id
   return getCommentsArrayForReview(reviewID).then((data) => {
-    res.status(200).send({data});
+    res.status(200).send({comments:data});
   });
 };

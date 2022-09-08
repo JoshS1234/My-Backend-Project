@@ -240,9 +240,9 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res)=>{
-        expect(res.body.data).toBeInstanceOf(Array)
-        res.body.data.forEach((element)=>{
-          expect(element).toBeInstanceOf(Object)
+        expect(res.body.comments).toBeInstanceOf(Array)
+        res.body.comments.forEach((comment)=>{
+          expect(comment).toBeInstanceOf(Object)
         })
       })
   });
@@ -251,7 +251,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res)=>{
-        expect(res.body.data.length).toBe(3)
+        expect(res.body.comments.length).toBe(3)
       })
   });
   test("Returns an array where each element has the correct keys and value types", () => {
@@ -259,12 +259,12 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res)=>{
-        res.body.data.forEach((element)=>{
-          expect(element).toHaveProperty("comment_id", expect.any(Number))
-          expect(element).toHaveProperty("votes", expect.any(Number))
-          expect(element).toHaveProperty("created_at", expect.any(String))
-          expect(element).toHaveProperty("body", expect.any(String))
-          expect(element).toHaveProperty("review_id", expect.any(Number))
+        res.body.comments.forEach((comment)=>{
+          expect(comment).toHaveProperty("comment_id", expect.any(Number))
+          expect(comment).toHaveProperty("votes", expect.any(Number))
+          expect(comment).toHaveProperty("created_at", expect.any(String))
+          expect(comment).toHaveProperty("body", expect.any(String))
+          expect(comment).toHaveProperty("review_id", expect.any(Number))
         })
       })
   });
@@ -297,11 +297,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res)=>{
-        let count=0;
-        res.body.data.forEach((element)=>{
-          expect(element).toEqual(correct[count])
-        count++
-        })
+        expect(res.body.comments).toEqual(correct)
       })
   });
 });
