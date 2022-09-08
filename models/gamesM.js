@@ -71,3 +71,9 @@ exports.getCommentsArrayForReview = (reviewID) => {
     return data.rows;
   });
 };
+
+exports.postCommentToSpecificReview = (reviewID) => {
+  return db.query(`SELECT * FROM comments WHERE review_id=$1`, [reviewID]).then((data) => {
+    return data.rows;
+  });
+};

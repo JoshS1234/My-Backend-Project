@@ -305,3 +305,9 @@ describe("GET /api/reviews/:review_id/comments", () => {
       })
   });
 });
+
+describe("GET /api/categories", () => {
+  test("Check it runs", ()=>{
+    
+  }
+})
