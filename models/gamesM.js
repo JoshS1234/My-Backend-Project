@@ -1,21 +1,18 @@
 const db = require("../db/connection");
 
 exports.getCategoryList = () => {
-  console.log("1");
   return db.query("SELECT * FROM categories").then((data) => {
     return data.rows;
   });
 };
 
 exports.getUserList = () => {
-  console.log("2");
   return db.query("SELECT * FROM users").then((users) => {
     return users.rows;
   });
 };
 
 exports.getSingleReviewByID = (reviewID) => {
-  console.log("3");
   return db
     .query(
       `SELECT reviews.review_id, review_body, title, designer, review_img_url, reviews.votes, category, owner, reviews.created_at FROM reviews 
@@ -41,7 +38,6 @@ exports.getSingleReviewByID = (reviewID) => {
 };
 
 exports.addReviewVotes = (reviewID, voteInc) => {
-  console.log("4");
   if (voteInc < 0) {
     return Promise.reject({ status: 400, msg: "Votes must be positive" });
   }
@@ -70,12 +66,8 @@ exports.addReviewVotes = (reviewID, voteInc) => {
     });
 };
 
-exports.getCommentArrayForReview = () => {
-  console.log("5");
-  console.log("in the model");
-
-  return db.query("SELECT * FROM COMMENTS").then((data) => {
-    console.log(data.rows);
+exports.getCommentsArrayForReview = (reviewID) => {
+  return db.query(`SELECT * FROM comments WHERE review_id=$1`, [reviewID]).then((data) => {
     return data.rows;
   });
 };

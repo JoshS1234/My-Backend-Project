@@ -3,6 +3,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const { reduce } = require("../db/data/test-data/categories");
+const { expect } = require("@jest/globals");
 const app = require(`${__dirname}/../app`);
 
 beforeEach(() => {
@@ -233,12 +234,74 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
-// describe.only("GET /api/reviews/:review_id/comments", () => {
-//   test("returns an array and a 200 status", () => {
-//     request(app)
-//       .get("/api/reviews/3/comments")
-//       .then((data) => {
-//         expect("a").toBe("b");
-//       });
-//   });
-// });
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("returns an array of objects and a 200 status", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.data).toBeInstanceOf(Array)
+        res.body.data.forEach((element)=>{
+          expect(element).toBeInstanceOf(Object)
+        })
+      })
+  });
+  test("Returns an array of the correct length", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.data.length).toBe(3)
+      })
+  });
+  test("Returns an array where each element has the correct keys and value types", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        res.body.data.forEach((element)=>{
+          expect(element).toHaveProperty("comment_id", expect.any(Number))
+          expect(element).toHaveProperty("votes", expect.any(Number))
+          expect(element).toHaveProperty("created_at", expect.any(String))
+          expect(element).toHaveProperty("body", expect.any(String))
+          expect(element).toHaveProperty("review_id", expect.any(Number))
+        })
+      })
+  });
+  test("Returned objects are fully correct", () => {
+    let correct = [{
+      comment_id: 1,
+      body: 'I loved this game too!',
+      review_id: 2,
+      author: 'bainesface',
+      votes: 16,
+      created_at: '2017-11-22T12:43:33.389Z'
+    },
+    {
+      comment_id: 4,
+      body: 'EPIC board game!',
+      review_id: 2,
+      author: 'bainesface',
+      votes: 16,
+      created_at: '2017-11-22T12:36:03.389Z'
+    },
+    {
+      comment_id: 5,
+      body: 'Now this is a story all about how, board games turned my life upside down',
+      review_id: 2,
+      author: 'mallionaire',
+      votes: 13,
+      created_at: '2021-01-18T10:24:05.410Z'
+    }];
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        let count=0;
+        res.body.data.forEach((element)=>{
+          expect(element).toEqual(correct[count])
+        count++
+        })
+      })
+  });
+});
