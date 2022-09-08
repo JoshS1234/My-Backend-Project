@@ -306,7 +306,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("GET /api/categories", () => {
+describe("GET /api/categories", () => {
   test("returns a 201 status", ()=>{
     let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
