@@ -4,6 +4,8 @@ const {
   getUsers,
   getReviewByID,
   patchReviewVotesByID,
+
+  getCommentsFromReview,
   getReviewListWithCommentCount,
 } = require(`${__dirname}/controllers/gamesC`);
 
@@ -14,6 +16,7 @@ app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
 app.get("/api/users", getUsers);
+app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 
 app.use((err, req, res, next) => {

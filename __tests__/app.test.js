@@ -2,6 +2,7 @@ const pool = require(`${__dirname}/../db/connection`);
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+
 const app = require(`${__dirname}/../app`);
 
 beforeEach(() => {
@@ -232,85 +233,72 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
-describe("get /api/reviews?category=<categoryName>", () => {
-  test("returns an array of objects", () => {
-    return request(app)
-      .get("/api/reviews")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.reviewList).toBeInstanceOf(Array);
-        res.body.reviewList.forEach((element) => {
-          expect(element).toBeInstanceOf(Object);
-        });
-      });
-  });
-  test("returns an array of objects with the correct properties", () => {
-    return request(app)
-      .get("/api/reviews")
-      .expect(200)
-      .then((res) => {
-        let objArr = res.body.reviewList;
-        for (element of objArr) {
-          expect(element).toHaveProperty("review_id", expect.any(Number));
-          expect(element).toHaveProperty("owner", expect.any(String));
-          expect(element).toHaveProperty("title", expect.any(String));
-          expect(element).toHaveProperty("category", expect.any(String));
-          expect(element).toHaveProperty("review_img_url", expect.any(String));
-          expect(element).toHaveProperty("created_at", expect.any(String));
-          expect(element).toHaveProperty("votes", expect.any(Number));
-          expect(element).toHaveProperty("designer", expect.any(String));
-          expect(element).toHaveProperty("comment_count", expect.any(Number));
-        }
-      });
-  });
-  test("Objects are sorted in descending date order by default", () => {
-    return request(app)
-      .get("/api/reviews")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.reviewList).toBeSortedBy("created_at", {
-          descending: true,
-        });
-      });
-  });
-  test("filters list on a given category, correct number of objects returned and all fit the filter criterion", () => {
-    return request(app)
-      .get("/api/reviews?owner=mallionaire")
-      .expect(200)
-      .then((list) => {
-        expect(list.body.reviewList.length).toBe(11);
-        list.body.reviewList.forEach((element) => {
-          expect(element.owner).toBe("mallionaire");
-        });
-      });
-  });
-  test("filters list on multiple given categories, correct number of objects returned and all fit the filter criterion", () => {
-    return request(app)
-      .get("/api/reviews?owner=mallionaire&title=Agricola")
-      .expect(200)
-      .then((list) => {
-        expect(list.body.reviewList.length).toBe(1);
-        list.body.reviewList.forEach((element) => {
-          expect(element.owner).toBe("mallionaire");
-          expect(element.title).toBe("Agricola");
-        });
-      });
-  });
 
-  test("returns an empty array with a 200 status even when it is an empty array answer", () => {
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("returns an array of objects and a 200 status", () => {
     return request(app)
-      .get("/api/reviews?owner=malli")
+      .get("/api/reviews/2/comments")
       .expect(200)
-      .then((res) => {
-        expect(res.body.reviewList).toEqual([]);
-      });
+      .then((res)=>{
+        expect(res.body.comments).toBeInstanceOf(Array)
+        res.body.comments.forEach((comment)=>{
+          expect(comment).toBeInstanceOf(Object)
+        })
+      })
   });
-  test("returns a 404 error if the requested category is invalid", () => {
+  test("Returns an array of the correct length", () => {
     return request(app)
-      .get("/api/reviews?ownedBy=malli")
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("not a valid topic");
-      });
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.comments.length).toBe(3)
+      })
+  });
+  test("Returns an array where each element has the correct keys and value types", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        res.body.comments.forEach((comment)=>{
+          expect(comment).toHaveProperty("comment_id", expect.any(Number))
+          expect(comment).toHaveProperty("votes", expect.any(Number))
+          expect(comment).toHaveProperty("created_at", expect.any(String))
+          expect(comment).toHaveProperty("body", expect.any(String))
+          expect(comment).toHaveProperty("review_id", expect.any(Number))
+        })
+      })
+  });
+  test("Returned objects are fully correct", () => {
+    let correct = [{
+      comment_id: 1,
+      body: 'I loved this game too!',
+      review_id: 2,
+      author: 'bainesface',
+      votes: 16,
+      created_at: '2017-11-22T12:43:33.389Z'
+    },
+    {
+      comment_id: 4,
+      body: 'EPIC board game!',
+      review_id: 2,
+      author: 'bainesface',
+      votes: 16,
+      created_at: '2017-11-22T12:36:03.389Z'
+    },
+    {
+      comment_id: 5,
+      body: 'Now this is a story all about how, board games turned my life upside down',
+      review_id: 2,
+      author: 'mallionaire',
+      votes: 13,
+      created_at: '2021-01-18T10:24:05.410Z'
+    }];
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then((res)=>{
+        expect(res.body.comments).toEqual(correct)
+      })
+
   });
 });
