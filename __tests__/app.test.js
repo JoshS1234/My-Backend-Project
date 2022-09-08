@@ -201,14 +201,14 @@ describe("Patch /api/reviews/:review_id", () => {
         expect(res.body.votes).toBe(35);
       });
   });
-  test("returns an error if a review ID is used that doesn't exist", () => {
+  test("returns a 404 error if a review ID is used that doesn't exist", () => {
     return request(app)
       .patch("/api/reviews/1021340123109")
       .send({ inc_votes: 1 })
-      .expect(400);
+      .expect(404);
   });
 
-  test("returns an error if a review ID is used that is invalid", () => {
+  test("returns a 404 error if a review ID is used that is invalid", () => {
     return request(app)
       .patch("/api/reviews/asda")
       .send({ inc_votes: 1 })
@@ -229,7 +229,7 @@ describe("Patch /api/reviews/:review_id", () => {
       .expect(400);
   });
 
-  test("returns an error if the vote number is missing", () => {
+  test("returns a 404 error if the vote number is missing", () => {
     return request(app).patch("/api/reviews/1").expect(400);
   });
 });
@@ -308,7 +308,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
 
 describe("GET /api/categories", () => {
   test("returns a 201 status", ()=>{
-    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/10/comments")
@@ -316,7 +316,7 @@ describe("GET /api/categories", () => {
     .expect(201)
   })
   test("returns a 201 status, with an attached object (with correct keys", ()=>{
-    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/10/comments")
@@ -335,7 +335,7 @@ describe("GET /api/categories", () => {
   })
 
   test("Returns a 201 status, and the uploaded object has the correct specific values where possible to check (Will also have a review_id, commend_id, votes, and created_at)", ()=>{
-    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/10/comments")
@@ -350,7 +350,7 @@ describe("GET /api/categories", () => {
   })
 
   test("Returns a 400 status, when endpoint is not formatted correctly", ()=>{
-    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/a/comments")
@@ -359,7 +359,7 @@ describe("GET /api/categories", () => {
   })
 
   test("Returns a 400 status, when given an invalid key", ()=>{
-    let inputObj = {name: "mallionaire", body: "This was decent, not the best not the worst"};
+    const inputObj = {name: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/a/comments")
@@ -368,12 +368,26 @@ describe("GET /api/categories", () => {
   })
 
   test("Returns a 400 status, when given an invalid type of value on a valid key", ()=>{
-    //username should be a string but is a number here
-    let inputObj = {username: 2, body: "This was decent, not the best not the worst"};
+    const inputObj = {username: 2, body: "This was decent, not the best not the worst"};
     
     return request(app)
     .post("/api/reviews/a/comments")
     .send(inputObj)
     .expect(400)
+  })
+
+  test("Returns a 404 status, if given a username that is not in the foreign key", ()=>{
+    const inputObj = {username: "josh", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/a/comments")
+    .send(inputObj)
+    .expect(404)
+  })
+
+  test("Returns a 400 status, if not given an object to attach", ()=>{
+    return request(app)
+    .post("/api/reviews/a/comments")
+    .expect(404)
   })
 });

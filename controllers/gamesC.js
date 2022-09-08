@@ -50,9 +50,9 @@ exports.getCommentsFromReview = (req, res) => {
 };
 
 exports.postCommentToReview = (req, res,next) => {
-  let reviewID = req.params.review_id
-  let objToPost = req.body
+  const reviewID = req.params.review_id
+  const objToPost = req.body
   return postCommentToSpecificReview(reviewID, objToPost).then((comment) => {
-    res.status(201).send({comment: comment[0]});
+    res.status(201).send({comment: comment});
   }).catch((err)=>{next(err)});
 };
