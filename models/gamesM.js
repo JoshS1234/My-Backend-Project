@@ -71,6 +71,7 @@ exports.getCommentsArrayForReview = (reviewID) => {
   return db.query(`SELECT * FROM comments WHERE review_id=$1`, [reviewID]).then((data) => {
     return data.rows;
   });
+}
 
 exports.getReviewListComments = (categoryObj) => {
   validKeys = [
