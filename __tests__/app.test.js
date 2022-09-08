@@ -306,8 +306,74 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-// describe("GET /api/categories", () => {
-//   test("Check it runs", ()=>{
-//     return request(app).post("/api/reviews/:review_id/comments").send({username:})
-//   }
-// })
+describe.only("GET /api/categories", () => {
+  test("returns a 201 status", ()=>{
+    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/10/comments")
+    .send(inputObj)
+    .expect(201)
+  })
+  test("returns a 201 status, with an attached object (with correct keys", ()=>{
+    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/10/comments")
+    .send(inputObj)
+    .expect(201)
+    .then((res)=>{
+      let returnedObj = res.body.comment;
+
+      expect(returnedObj).toHaveProperty("comment_id",expect.any(Number));
+      expect(returnedObj).toHaveProperty("body",expect.any(String));
+      expect(returnedObj).toHaveProperty("review_id",expect.any(Number));
+      expect(returnedObj).toHaveProperty("author",expect.any(String));
+      expect(returnedObj).toHaveProperty("votes",expect.any(Number));
+      expect(returnedObj).toHaveProperty("created_at",expect.any(String));
+    })
+  })
+
+  test("Returns a 201 status, and the uploaded object has the correct specific values where possible to check (Will also have a review_id, commend_id, votes, and created_at)", ()=>{
+    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/10/comments")
+    .send(inputObj)
+    .expect(201).then((res)=>{
+      
+      let returnedObj = res.body.comment;
+      expect(returnedObj.author).toBe(inputObj.username);
+      expect(returnedObj.body).toBe(inputObj.body);
+      expect(returnedObj.votes).toBe(0);
+    })
+  })
+
+  test("Returns a 400 status, when endpoint is not formatted correctly", ()=>{
+    let inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/a/comments")
+    .send(inputObj)
+    .expect(400)
+  })
+
+  test("Returns a 400 status, when given an invalid key", ()=>{
+    let inputObj = {name: "mallionaire", body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/a/comments")
+    .send(inputObj)
+    .expect(400)
+  })
+
+  test("Returns a 400 status, when given an invalid type of value on a valid key", ()=>{
+    //username should be a string but is a number here
+    let inputObj = {username: 2, body: "This was decent, not the best not the worst"};
+    
+    return request(app)
+    .post("/api/reviews/a/comments")
+    .send(inputObj)
+    .expect(400)
+  })
+});
