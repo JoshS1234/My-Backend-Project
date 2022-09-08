@@ -95,6 +95,7 @@ exports.getCommentsArrayForReview = (reviewID) => {
 //       });
 // };
 exports.postCommentToSpecificReview = (reviewID, objToPost) => {
+  console.log(typeof objToPost.username)
   
   return db
     .query(
