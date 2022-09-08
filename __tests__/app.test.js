@@ -303,7 +303,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe("GET /api/categories", () => {
+describe("POST /api/reviews/:review_id/comments", () => {
   test("returns a 201 status", ()=>{
     const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
     
@@ -355,36 +355,37 @@ describe("GET /api/categories", () => {
     .expect(400)
   })
 
-  test("Returns a 400 status, when given an invalid key", ()=>{
+  test("Returns a 400 status, when given an non-existent key", ()=>{
     const inputObj = {name: "mallionaire", body: "This was decent, not the best not the worst"};
     
     return request(app)
-    .post("/api/reviews/a/comments")
+    .post("/api/reviews/1/comments")
     .send(inputObj)
-    .expect(400)
+    .expect(404)
   })
 
-  test("Returns a 400 status, when given an invalid type of value on a valid key", ()=>{
+  test("Returns a 404 status, when given an invalid type of value on a valid key", ()=>{
     const inputObj = {username: 2, body: "This was decent, not the best not the worst"};
     
     return request(app)
-    .post("/api/reviews/a/comments")
+    .post("/api/reviews/1/comments")
     .send(inputObj)
-    .expect(400)
+    //Should this be 404 or 400?
+    .expect(404)
   })
 
-  // test("Returns a 404 status, if given a username that is not in the foreign key", ()=>{
-  //   const inputObj = {username: "josh", body: "This was decent, not the best not the worst"};
+  test("Returns a 404 status, if given a username that is not in the foreign key", ()=>{
+    const inputObj = {username: "josh", body: "This was decent, not the best not the worst"};
     
-  //   return request(app)
-  //   .post("/api/reviews/a/comments")
-  //   .send(inputObj)
-  //   .expect(404)
-  // })
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .send(inputObj)
+    .expect(404)
+  })
 
-  // test("Returns a 400 status, if not given an object to attach", ()=>{
-  //   return request(app)
-  //   .post("/api/reviews/a/comments")
-  //   .expect(404)
-  // })
+  test("Returns a 400 status, if not given an object to attach", ()=>{
+    return request(app)
+    .post("/api/reviews/1/comments")
+    .expect(404)
+  })
 });
