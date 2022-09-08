@@ -6,6 +6,7 @@ const {
   patchReviewVotesByID,
 
   getCommentsFromReview,
+  postCommentToReview
   getReviewListWithCommentCount,
 } = require(`${__dirname}/controllers/gamesC`);
 
@@ -17,6 +18,7 @@ app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
 app.get("/api/users", getUsers);
 app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
+app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 
 app.use((err, req, res, next) => {
@@ -30,7 +32,12 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   let errorPSQLCodes = ["22P02", "22003"];
   if (errorPSQLCodes.includes(err.code)) {
-    res.status(400).send({ msg: "bad request" });
+    if (err.code === "22P02"){
+      res.status(400).send({ msg: "not found" });
+    } else if (err.code==="22003"){
+      res.status(404).send({msg:"bad request"})
+    }
+    
   } else {
     next(err);
   }
