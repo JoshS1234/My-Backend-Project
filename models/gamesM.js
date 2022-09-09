@@ -151,28 +151,6 @@ FULL JOIN reviews ON reviews.review_id = comments.review_id `;
   }
 };
 
-
-// exports.postCommentToSpecificReview = (reviewID, objToPost) => {
-
-//     return db
-//       .query(
-//         `INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3)`,
-//         [reviewID, objToPost.username, objToPost.body]
-//       )
-//       .then((data) => {
-//         return db.query(
-//           `SELECT * FROM comments WHERE review_id=$1 AND author=$2 AND body=$3`,
-//           [reviewID, objToPost.username, objToPost.body]
-//         );
-//       })
-//       .then((uploadedComment) => {
-//         return uploadedComment.rows;
-//       })
-//       .catch((err)=>{
-//         return Promise.reject(err)
-//       });
-// };
-
 exports.postCommentToSpecificReview = (reviewID, objToPost) => {
   return db
     .query(
@@ -201,4 +179,3 @@ exports.deleteCommentFromIDModel = (commentID) => {
       }
     });
 };
-
