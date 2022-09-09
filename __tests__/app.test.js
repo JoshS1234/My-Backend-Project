@@ -239,34 +239,11 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res) => {
-        expect(res.body.comments).toBeInstanceOf(Array);
         res.body.comments.forEach((comment) => {
           expect(comment).toBeInstanceOf(Object);
         });
       });
-  });
-  test("Returns an array of the correct length", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.comments.length).toBe(3);
-      });
-  });
-  test("Returns an array where each element has the correct keys and value types", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then((res) => {
-        res.body.comments.forEach((comment) => {
-          expect(comment).toHaveProperty("comment_id", expect.any(Number));
-          expect(comment).toHaveProperty("votes", expect.any(Number));
-          expect(comment).toHaveProperty("created_at", expect.any(String));
-          expect(comment).toHaveProperty("body", expect.any(String));
-          expect(comment).toHaveProperty("review_id", expect.any(Number));
-        });
-      });
-  });
+
   test("Returned objects are fully correct", () => {
     let correct = [
       {
@@ -504,7 +481,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 
-  test("Returns a 400 status, when endpoint is not formatted correctly", () => {
+  test("Returns a 400 status, when the review id (in endpoint) is the wrong format", () => {
     const inputObj = {
       username: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -516,7 +493,9 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(400);
   });
 
-  test("Returns a 400 status, when given an non-existent key", () => {
+
+  test("Returns a 404 status, when given an non-existent key on the attached object", () => {
+
     const inputObj = {
       name: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -526,21 +505,6 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .post("/api/reviews/1/comments")
       .send(inputObj)
       .expect(404);
-  });
-
-  test("Returns a 404 status, when given an invalid type of value on a valid key", () => {
-    const inputObj = {
-      username: 2,
-      body: "This was decent, not the best not the worst",
-    };
-
-    return (
-      request(app)
-        .post("/api/reviews/1/comments")
-        .send(inputObj)
-        //Should this be 404 or 400?
-        .expect(404)
-    );
   });
 
   test("Returns a 404 status, if given a username that is not in the foreign key", () => {
@@ -555,6 +519,49 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(404);
   });
 
+  test("Returns a 404 status, if not given a username (this is the foreign key)", () => {
+    const inputObj = {
+      body: "This was decent, not the best not the worst",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+
+  test("Returns a 404 status, if not given a body in the sent object (this is not the foreign key)", () => {
+    const inputObj = {
+      username: "mallionaire",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+  test("Returns a 404 status, if not given an object to attach", () => {
+    return request(app).post("/api/reviews/1/comments").expect(404);
+  });
+});
+
+describe("api delete comment by ID", () => {
+  test("returns 204 status and empty body", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((res) => {
+        expect(res.body).toEqual({});
+      });
+  });
+  test("returns 404 status when the requested comment ID doesn't exist", () => {
+    return request(app).delete("/api/comments/10120102").expect(404);
+  });
+  test("returns 400 status when the requested comment ID is the wrong type (not a string)", () => {
+    return request(app).delete("/api/comments/asa").expect(400);
+  });
   test("Returns a 400 status, if not given an object to attach", () => {
     return request(app).post("/api/reviews/1/comments").expect(404);
   });

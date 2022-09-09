@@ -6,6 +6,7 @@ const {
   getCommentsArrayForReview,
   postCommentToSpecificReview,
   getReviewListComments,
+  deleteCommentFromIDModel,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
@@ -67,6 +68,17 @@ exports.getReviewListWithCommentCount = (req, res, next) => {
   return getReviewListComments(categoryObj)
     .then((reviewList) => {
       res.status(200).send({ reviewList });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentByID = (req, res, next) => {
+  let commentID = req.params.comment_id;
+  return deleteCommentFromIDModel(commentID)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);

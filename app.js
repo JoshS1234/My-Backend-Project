@@ -7,6 +7,7 @@ const {
   getCommentsFromReview,
   postCommentToReview,
   getReviewListWithCommentCount,
+  deleteCommentByID,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -19,6 +20,7 @@ app.get("/api/users", getUsers);
 app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
 app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
+app.delete("/api/comments/:comment_id", deleteCommentByID);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
@@ -48,6 +50,7 @@ app.use((err, req, res, next) => {
 
 //error handling
 app.use((err, req, res, next) => {
+  console.log(err);
   console.log(err.code);
   res.status(500).send({ msg: "general error catch" });
 });
