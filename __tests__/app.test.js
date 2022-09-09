@@ -407,7 +407,7 @@ describe("get /api/reviews?category=<categoryName>&sort_by=<sort_category>&order
       });
   });
 
-  test("returns 200 when given a sort_by constraint and returns an array of objects in the correct order", () => {
+  test("returns 200 when given a sort_by constraint and an order method and returns an array of objects in the correct order", () => {
     return request(app)
       .get("/api/reviews?sort_by=created_at&order=asc")
       .expect(200)
@@ -430,21 +430,9 @@ describe("get /api/reviews?category=<categoryName>&sort_by=<sort_category>&order
       });
   });
 
-  test("returns 404 when order query is not asc/desc (but is a string", () => {
-    return request(app)
-      .get("/api/reviews?owner=mallionaire&sort_by=created_at&order=hat")
-      .expect(404);
-  });
-
   test("returns 404 when order query is not asc/desc (and is not a string", () => {
     return request(app)
       .get("/api/reviews?owner=mallionaire&sort_by=created_at&order=1")
-      .expect(404);
-  });
-
-  test("returns 404 when sort_by query is not a valid key (and is a string)", () => {
-    return request(app)
-      .get("/api/reviews?owner=mallionaire&sort_by=hat&order=asc")
       .expect(404);
   });
 
