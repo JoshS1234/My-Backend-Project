@@ -259,7 +259,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   //       });
   //     });
   // });
-  test("Returned objects are fully correct", () => {
+  test("Returned objects is correct length, with correct keys and values", () => {
     let correct = [
       {
         comment_id: 1,
@@ -431,7 +431,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 
-  test("Returns a 400 status, when endpoint is not formatted correctly", () => {
+  test("Returns a 400 status, when the review id (in endpoint) is the wrong format", () => {
     const inputObj = {
       username: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -443,7 +443,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(400);
   });
 
-  test.only("Returns a 400 status, when given an non-existent key", () => {
+  test("Returns a 404 status, when given an non-existent key on the attached object", () => {
     const inputObj = {
       name: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -453,21 +453,6 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .post("/api/reviews/1/comments")
       .send(inputObj)
       .expect(404);
-  });
-
-  test("Returns a 404 status, when given an invalid type of value on a valid key", () => {
-    const inputObj = {
-      username: 2,
-      body: "This was decent, not the best not the worst",
-    };
-
-    return (
-      request(app)
-        .post("/api/reviews/1/comments")
-        .send(inputObj)
-        //Should this be 404 or 400?
-        .expect(404)
-    );
   });
 
   test("Returns a 404 status, if given a username that is not in the foreign key", () => {
@@ -482,7 +467,29 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(404);
   });
 
-  test("Returns a 400 status, if not given an object to attach", () => {
+  test("Returns a 404 status, if not given a username (this is the foreign key)", () => {
+    const inputObj = {
+      body: "This was decent, not the best not the worst",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+  test("Returns a 404 status, if not given a body in the sent object (this is not the foreign key)", () => {
+    const inputObj = {
+      username: "mallionaire",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+  test("Returns a 404 status, if not given an object to attach", () => {
     return request(app).post("/api/reviews/1/comments").expect(404);
   });
 });
