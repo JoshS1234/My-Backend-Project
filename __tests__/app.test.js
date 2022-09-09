@@ -239,34 +239,26 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res) => {
-        expect(res.body.comments).toBeInstanceOf(Array);
         res.body.comments.forEach((comment) => {
           expect(comment).toBeInstanceOf(Object);
         });
       });
   });
-  test("Returns an array of the correct length", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.comments.length).toBe(3);
-      });
-  });
-  test("Returns an array where each element has the correct keys and value types", () => {
-    return request(app)
-      .get("/api/reviews/2/comments")
-      .expect(200)
-      .then((res) => {
-        res.body.comments.forEach((comment) => {
-          expect(comment).toHaveProperty("comment_id", expect.any(Number));
-          expect(comment).toHaveProperty("votes", expect.any(Number));
-          expect(comment).toHaveProperty("created_at", expect.any(String));
-          expect(comment).toHaveProperty("body", expect.any(String));
-          expect(comment).toHaveProperty("review_id", expect.any(Number));
-        });
-      });
-  });
+
+  // test("Returns an array where each element has the correct keys and value types", () => {
+  //   return request(app)
+  //     .get("/api/reviews/2/comments")
+  //     .expect(200)
+  //     .then((res) => {
+  //       res.body.comments.forEach((comment) => {
+  //         expect(comment).toHaveProperty("comment_id", expect.any(Number));
+  //         expect(comment).toHaveProperty("votes", expect.any(Number));
+  //         expect(comment).toHaveProperty("created_at", expect.any(String));
+  //         expect(comment).toHaveProperty("body", expect.any(String));
+  //         expect(comment).toHaveProperty("review_id", expect.any(Number));
+  //       });
+  //     });
+  // });
   test("Returned objects are fully correct", () => {
     let correct = [
       {
@@ -298,6 +290,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res) => {
+        expect(res.body.comments.length).toBe(3);
         expect(res.body.comments).toEqual(correct);
       });
   });
@@ -450,7 +443,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(400);
   });
 
-  test("Returns a 400 status, when given an non-existent key", () => {
+  test.only("Returns a 400 status, when given an non-existent key", () => {
     const inputObj = {
       name: "mallionaire",
       body: "This was decent, not the best not the worst",
