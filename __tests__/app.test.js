@@ -506,7 +506,7 @@ describe("api delete comment by ID", () => {
   test("returns 404 status when the requested comment ID doesn't exist", () => {
     return request(app).delete("/api/comments/10120102").expect(404);
   });
-  test("returns 404 status when the requested comment ID is the wrong type (not a string)", () => {
+  test("returns 400 status when the requested comment ID is the wrong type (not a string)", () => {
     return request(app).delete("/api/comments/asa").expect(400);
   });
 });
