@@ -233,73 +233,73 @@ describe("Patch /api/reviews/:review_id", () => {
   });
 });
 
-
 describe("GET /api/reviews/:review_id/comments", () => {
   test("returns an array of objects and a 200 status", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
-      .then((res)=>{
-        expect(res.body.comments).toBeInstanceOf(Array)
-        res.body.comments.forEach((comment)=>{
-          expect(comment).toBeInstanceOf(Object)
-        })
-      })
+      .then((res) => {
+        expect(res.body.comments).toBeInstanceOf(Array);
+        res.body.comments.forEach((comment) => {
+          expect(comment).toBeInstanceOf(Object);
+        });
+      });
   });
   test("Returns an array of the correct length", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
-      .then((res)=>{
-        expect(res.body.comments.length).toBe(3)
-      })
+      .then((res) => {
+        expect(res.body.comments.length).toBe(3);
+      });
   });
   test("Returns an array where each element has the correct keys and value types", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
-      .then((res)=>{
-        res.body.comments.forEach((comment)=>{
-          expect(comment).toHaveProperty("comment_id", expect.any(Number))
-          expect(comment).toHaveProperty("votes", expect.any(Number))
-          expect(comment).toHaveProperty("created_at", expect.any(String))
-          expect(comment).toHaveProperty("body", expect.any(String))
-          expect(comment).toHaveProperty("review_id", expect.any(Number))
-        })
-      })
+      .then((res) => {
+        res.body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id", expect.any(Number));
+          expect(comment).toHaveProperty("votes", expect.any(Number));
+          expect(comment).toHaveProperty("created_at", expect.any(String));
+          expect(comment).toHaveProperty("body", expect.any(String));
+          expect(comment).toHaveProperty("review_id", expect.any(Number));
+        });
+      });
   });
   test("Returned objects are fully correct", () => {
-    let correct = [{
-      comment_id: 1,
-      body: 'I loved this game too!',
-      review_id: 2,
-      author: 'bainesface',
-      votes: 16,
-      created_at: '2017-11-22T12:43:33.389Z'
-    },
-    {
-      comment_id: 4,
-      body: 'EPIC board game!',
-      review_id: 2,
-      author: 'bainesface',
-      votes: 16,
-      created_at: '2017-11-22T12:36:03.389Z'
-    },
-    {
-      comment_id: 5,
-      body: 'Now this is a story all about how, board games turned my life upside down',
-      review_id: 2,
-      author: 'mallionaire',
-      votes: 13,
-      created_at: '2021-01-18T10:24:05.410Z'
-    }];
+    let correct = [
+      {
+        comment_id: 1,
+        body: "I loved this game too!",
+        review_id: 2,
+        author: "bainesface",
+        votes: 16,
+        created_at: "2017-11-22T12:43:33.389Z",
+      },
+      {
+        comment_id: 4,
+        body: "EPIC board game!",
+        review_id: 2,
+        author: "bainesface",
+        votes: 16,
+        created_at: "2017-11-22T12:36:03.389Z",
+      },
+      {
+        comment_id: 5,
+        body: "Now this is a story all about how, board games turned my life upside down",
+        review_id: 2,
+        author: "mallionaire",
+        votes: 13,
+        created_at: "2021-01-18T10:24:05.410Z",
+      },
+    ];
     return request(app)
       .get("/api/reviews/2/comments")
       .expect(200)
-      .then((res)=>{
-        expect(res.body.comments).toEqual(correct)
-      })
-
+      .then((res) => {
+        expect(res.body.comments).toEqual(correct);
+      });
   });
 });
 
@@ -387,88 +387,126 @@ describe("get /api/reviews?category=<categoryName>", () => {
 });
 
 describe("POST /api/reviews/:review_id/comments", () => {
-  test("returns a 201 status", ()=>{
-    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
-    
-    return request(app)
-    .post("/api/reviews/10/comments")
-    .send(inputObj)
-    .expect(201)
-  })
-  test("returns a 201 status, with an attached object (with correct keys", ()=>{
-    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
-    
-    return request(app)
-    .post("/api/reviews/10/comments")
-    .send(inputObj)
-    .expect(201)
-    .then((res)=>{
-      let returnedObj = res.body.comment;
+  test("returns a 201 status", () => {
+    const inputObj = {
+      username: "mallionaire",
+      body: "This was decent, not the best not the worst",
+    };
 
-      expect(returnedObj).toHaveProperty("comment_id",expect.any(Number));
-      expect(returnedObj).toHaveProperty("body",expect.any(String));
-      expect(returnedObj).toHaveProperty("review_id",expect.any(Number));
-      expect(returnedObj).toHaveProperty("author",expect.any(String));
-      expect(returnedObj).toHaveProperty("votes",expect.any(Number));
-      expect(returnedObj).toHaveProperty("created_at",expect.any(String));
-    })
-  })
-
-  test("Returns a 201 status, and the uploaded object has the correct specific values where possible to check (Will also have a review_id, commend_id, votes, and created_at)", ()=>{
-    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
-    
     return request(app)
-    .post("/api/reviews/10/comments")
-    .send(inputObj)
-    .expect(201).then((res)=>{
-      
-      let returnedObj = res.body.comment;
-      expect(returnedObj.author).toBe(inputObj.username);
-      expect(returnedObj.body).toBe(inputObj.body);
-      expect(returnedObj.votes).toBe(0);
-    })
-  })
+      .post("/api/reviews/10/comments")
+      .send(inputObj)
+      .expect(201);
+  });
+  test("returns a 201 status, with an attached object (with correct keys", () => {
+    const inputObj = {
+      username: "mallionaire",
+      body: "This was decent, not the best not the worst",
+    };
 
-  test("Returns a 400 status, when endpoint is not formatted correctly", ()=>{
-    const inputObj = {username: "mallionaire", body: "This was decent, not the best not the worst"};
-    
     return request(app)
-    .post("/api/reviews/a/comments")
-    .send(inputObj)
-    .expect(400)
-  })
+      .post("/api/reviews/10/comments")
+      .send(inputObj)
+      .expect(201)
+      .then((res) => {
+        let returnedObj = res.body.comment;
 
-  test("Returns a 400 status, when given an non-existent key", ()=>{
-    const inputObj = {name: "mallionaire", body: "This was decent, not the best not the worst"};
-    
-    return request(app)
-    .post("/api/reviews/1/comments")
-    .send(inputObj)
-    .expect(404)
-  })
+        expect(returnedObj).toHaveProperty("comment_id", expect.any(Number));
+        expect(returnedObj).toHaveProperty("body", expect.any(String));
+        expect(returnedObj).toHaveProperty("review_id", expect.any(Number));
+        expect(returnedObj).toHaveProperty("author", expect.any(String));
+        expect(returnedObj).toHaveProperty("votes", expect.any(Number));
+        expect(returnedObj).toHaveProperty("created_at", expect.any(String));
+      });
+  });
 
-  test("Returns a 404 status, when given an invalid type of value on a valid key", ()=>{
-    const inputObj = {username: 2, body: "This was decent, not the best not the worst"};
-    
-    return request(app)
-    .post("/api/reviews/1/comments")
-    .send(inputObj)
-    //Should this be 404 or 400?
-    .expect(404)
-  })
+  test("Returns a 201 status, and the uploaded object has the correct specific values where possible to check (Will also have a review_id, commend_id, votes, and created_at)", () => {
+    const inputObj = {
+      username: "mallionaire",
+      body: "This was decent, not the best not the worst",
+    };
 
-  test("Returns a 404 status, if given a username that is not in the foreign key", ()=>{
-    const inputObj = {username: "josh", body: "This was decent, not the best not the worst"};
-    
     return request(app)
-    .post("/api/reviews/1/comments")
-    .send(inputObj)
-    .expect(404)
-  })
+      .post("/api/reviews/10/comments")
+      .send(inputObj)
+      .expect(201)
+      .then((res) => {
+        let returnedObj = res.body.comment;
+        expect(returnedObj.author).toBe(inputObj.username);
+        expect(returnedObj.body).toBe(inputObj.body);
+        expect(returnedObj.votes).toBe(0);
+      });
+  });
 
-  test("Returns a 400 status, if not given an object to attach", ()=>{
+  test("Returns a 400 status, when endpoint is not formatted correctly", () => {
+    const inputObj = {
+      username: "mallionaire",
+      body: "This was decent, not the best not the worst",
+    };
+
     return request(app)
-    .post("/api/reviews/1/comments")
-    .expect(404)
-  })
+      .post("/api/reviews/a/comments")
+      .send(inputObj)
+      .expect(400);
+  });
+
+  test("Returns a 400 status, when given an non-existent key", () => {
+    const inputObj = {
+      name: "mallionaire",
+      body: "This was decent, not the best not the worst",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+  test("Returns a 404 status, when given an invalid type of value on a valid key", () => {
+    const inputObj = {
+      username: 2,
+      body: "This was decent, not the best not the worst",
+    };
+
+    return (
+      request(app)
+        .post("/api/reviews/1/comments")
+        .send(inputObj)
+        //Should this be 404 or 400?
+        .expect(404)
+    );
+  });
+
+  test("Returns a 404 status, if given a username that is not in the foreign key", () => {
+    const inputObj = {
+      username: "josh",
+      body: "This was decent, not the best not the worst",
+    };
+
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(inputObj)
+      .expect(404);
+  });
+
+  test("Returns a 400 status, if not given an object to attach", () => {
+    return request(app).post("/api/reviews/1/comments").expect(404);
+  });
+});
+
+describe("api delete comment by ID", () => {
+  test("returns 204 status and empty body", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((res) => {
+        expect(res.body).toEqual({});
+      });
+  });
+  test("returns 404 status when the requested comment ID doesn't exist", () => {
+    return request(app).delete("/api/comments/10120102").expect(404);
+  });
+  test("returns 404 status when the requested comment ID is the wrong type (not a string)", () => {
+    return request(app).delete("/api/comments/asa").expect(400);
+  });
 });
