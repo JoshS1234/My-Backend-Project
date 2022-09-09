@@ -243,23 +243,8 @@ describe("GET /api/reviews/:review_id/comments", () => {
           expect(comment).toBeInstanceOf(Object);
         });
       });
-  });
 
-  // test("Returns an array where each element has the correct keys and value types", () => {
-  //   return request(app)
-  //     .get("/api/reviews/2/comments")
-  //     .expect(200)
-  //     .then((res) => {
-  //       res.body.comments.forEach((comment) => {
-  //         expect(comment).toHaveProperty("comment_id", expect.any(Number));
-  //         expect(comment).toHaveProperty("votes", expect.any(Number));
-  //         expect(comment).toHaveProperty("created_at", expect.any(String));
-  //         expect(comment).toHaveProperty("body", expect.any(String));
-  //         expect(comment).toHaveProperty("review_id", expect.any(Number));
-  //       });
-  //     });
-  // });
-  test("Returned objects is correct length, with correct keys and values", () => {
+  test("Returned objects are fully correct", () => {
     let correct = [
       {
         comment_id: 1,
@@ -290,13 +275,12 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/2/comments")
       .expect(200)
       .then((res) => {
-        expect(res.body.comments.length).toBe(3);
         expect(res.body.comments).toEqual(correct);
       });
   });
 });
 
-describe("get /api/reviews?category=<categoryName>", () => {
+describe("get /api/reviews?category=<categoryName>&sort_by=<sort_category>&order=<ASC/DESC>", () => {
   test("returns an array of objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -374,7 +358,73 @@ describe("get /api/reviews?category=<categoryName>", () => {
       .get("/api/reviews?ownedBy=malli")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("not a valid topic");
+        expect(res.body.msg).toBe("not a valid key");
+      });
+  });
+  test("rejects with an error when the same key is used more than once", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&owner=bainesface")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Query has been entered more than once");
+      });
+  });
+
+  test("returns 200 when given a sort_by constraint and returns an array of objects", () => {
+    return request(app).get("/api/reviews?sort_by=owner").expect(200);
+  });
+
+  test("returns 200 when given a sort_by constraint and returns an array of objects in the correct order", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=owner")
+      .expect(200)
+      .then((reviews) => {
+        const reviewArr = reviews.body.reviewList;
+        expect(reviewArr).toBeSortedBy("owner", { descending: true });
+      });
+  });
+
+  test("returns 200 when given a sort_by constraint and an order method and returns an array of objects in the correct order", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=created_at&order=asc")
+      .expect(200)
+      .then((reviews) => {
+        const reviewArr = reviews.body.reviewList;
+        expect(reviewArr).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+
+  test("returns 200 and a filtered list when given a sort_by constraint and returns an array of objects in the correct order", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&sort_by=created_at&order=asc")
+      .expect(200)
+      .then((reviews) => {
+        const reviewArr = reviews.body.reviewList;
+        expect(reviewArr).toBeSortedBy("created_at", { ascending: true });
+        reviewArr.forEach((review) => {
+          expect(review.owner).toBe("mallionaire");
+        });
+      });
+  });
+
+  test("returns 404 when order query is not asc/desc (and is not a string", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&sort_by=created_at&order=1")
+      .expect(404);
+  });
+
+  test("returns 404 when sort_by query is not a valid key (and is not a string)", () => {
+    return request(app)
+      .get("/api/reviews?owner=mallionaire&sort_by=1&order=asc")
+      .expect(404);
+  });
+
+  test("rejects with an error when the same option is used twice", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=mallionaire&sort_by=bainesface")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Query has been entered more than once");
       });
   });
 });
@@ -443,7 +493,9 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(400);
   });
 
+
   test("Returns a 404 status, when given an non-existent key on the attached object", () => {
+
     const inputObj = {
       name: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -478,6 +530,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(404);
   });
 
+
   test("Returns a 404 status, if not given a body in the sent object (this is not the foreign key)", () => {
     const inputObj = {
       username: "mallionaire",
@@ -508,5 +561,8 @@ describe("api delete comment by ID", () => {
   });
   test("returns 400 status when the requested comment ID is the wrong type (not a string)", () => {
     return request(app).delete("/api/comments/asa").expect(400);
+  });
+  test("Returns a 400 status, if not given an object to attach", () => {
+    return request(app).post("/api/reviews/1/comments").expect(404);
   });
 });
