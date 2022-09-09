@@ -381,15 +381,15 @@ describe("get /api/reviews?category=<categoryName>&sort_by=<sort_category>&order
       .get("/api/reviews?ownedBy=malli")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("not a valid topic");
+        expect(res.body.msg).toBe("not a valid key");
       });
   });
-  test("rejects with an error when the same key is used twice", () => {
+  test("rejects with an error when the same key is used more than once", () => {
     return request(app)
       .get("/api/reviews?owner=mallionaire&owner=bainesface")
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Query has been entered twice");
+        expect(res.body.msg).toBe("Query has been entered more than once");
       });
   });
 
@@ -447,7 +447,7 @@ describe("get /api/reviews?category=<categoryName>&sort_by=<sort_category>&order
       .get("/api/reviews?sort_by=mallionaire&sort_by=bainesface")
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Query has been entered twice");
+        expect(res.body.msg).toBe("Query has been entered more than once");
       });
   });
 });

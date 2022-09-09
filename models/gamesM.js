@@ -98,7 +98,10 @@ FULL JOIN reviews ON reviews.review_id = comments.review_id `;
   }
 
   if (repeatKey) {
-    return Promise.reject({ status: 400, msg: "Query has been entered twice" });
+    return Promise.reject({
+      status: 400,
+      msg: "Query has been entered more than once",
+    });
   } else {
     let defaultQueryStr2 = `GROUP BY reviews.review_id ORDER BY created_at `;
     let defaultQueryStr3 = `DESC;`;
@@ -143,7 +146,7 @@ FULL JOIN reviews ON reviews.review_id = comments.review_id `;
         return output;
       });
     } else {
-      return Promise.reject({ status: 404, msg: "not a valid topic" });
+      return Promise.reject({ status: 404, msg: "not a valid key" });
     }
   }
 };
