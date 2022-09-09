@@ -43,20 +43,23 @@ exports.patchReviewVotesByID = (req, res, next) => {
     });
 };
 
-
 exports.getCommentsFromReview = (req, res) => {
-  let reviewID = req.params.review_id
+  let reviewID = req.params.review_id;
   return getCommentsArrayForReview(reviewID).then((data) => {
-    res.status(200).send({comments:data});
+    res.status(200).send({ comments: data });
   });
 };
 
-exports.postCommentToReview = (req, res,next) => {
-  const reviewID = req.params.review_id
-  const objToPost = req.body
-  return postCommentToSpecificReview(reviewID, objToPost).then((comment) => {
-    res.status(201).send({comment: comment});
-  }).catch((err)=>{next(err)});
+exports.postCommentToReview = (req, res, next) => {
+  const reviewID = req.params.review_id;
+  const objToPost = req.body;
+  return postCommentToSpecificReview(reviewID, objToPost)
+    .then((comment) => {
+      res.status(201).send({ comment: comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getReviewListWithCommentCount = (req, res, next) => {
