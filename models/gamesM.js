@@ -180,9 +180,15 @@ exports.deleteCommentFromIDModel = (commentID) => {
     });
 };
 
-//Bonus questions for extra functionality (not tested yet)
+//Bonus questions for extra functionality)
 exports.getOwnerList = () => {
   return db.query("SELECT * FROM users").then((data) => {
+    return data.rows;
+  });
+};
+
+exports.getDesignerList = () => {
+  return db.query("SELECT * FROM reviews").then((data) => {
     return data.rows;
   });
 };

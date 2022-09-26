@@ -10,6 +10,7 @@ const {
   getReviewListWithCommentCount,
   deleteCommentByID,
   getOwners,
+  getDesigners,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -27,6 +28,7 @@ app.delete("/api/comments/:comment_id", deleteCommentByID);
 
 //Bonus questions for extra functionality
 app.get("/api/owners", getOwners);
+app.get("/api/designers", getDesigners);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
