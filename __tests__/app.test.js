@@ -579,7 +579,7 @@ describe("GET /api/owners", () => {
         expect(res.body).toBeInstanceOf(Array);
       });
   });
-  test("Elements of array are objects", () => {
+  test("Elements of array are strings", () => {
     return request(app)
       .get("/api/owners")
       .expect(200)
@@ -589,7 +589,7 @@ describe("GET /api/owners", () => {
         });
       });
   });
-  test("Elements of array are objects with the correct properties and types", () => {
+  test("Array for test data is correct", () => {
     return request(app)
       .get("/api/owners")
       .expect(200)
@@ -599,6 +599,48 @@ describe("GET /api/owners", () => {
           "philippaclaire9",
           "bainesface",
           "dav3rid",
+        ]);
+      });
+  });
+});
+
+describe("GET /api/designers", () => {
+  test("returns an array as part of an object from a get request at this endpoint", () => {
+    return request(app)
+      .get("/api/designers")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.designers).toBeInstanceOf(Array);
+      });
+  });
+  test("Elements of array are strings", () => {
+    return request(app)
+      .get("/api/designers")
+      .expect(200)
+      .then((res) => {
+        res.body.designers.forEach((element) => {
+          expect(typeof element).toBe("string");
+        });
+      });
+  });
+  test("Array for test data is correct", () => {
+    return request(app)
+      .get("/api/designers")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.designers).toEqual([
+          "Uwe Rosenberg",
+          "Leslie Scott",
+          "Akihisa Okui",
+          "Gamey McGameface",
+          "Seymour Buttz",
+          "Ollie Tabooger",
+          "Avery Wunzboogerz",
+          "Wolfgang Warsch",
+          "Asger Harding Granerud",
+          "Fiona Lohoar",
+          "Jamey Stegmaier",
+          "Klaus Teuber",
         ]);
       });
   });

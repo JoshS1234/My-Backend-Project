@@ -8,6 +8,7 @@ const {
   getReviewListComments,
   deleteCommentFromIDModel,
   getOwnerList,
+  getDesignerList,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
@@ -86,7 +87,7 @@ exports.deleteCommentByID = (req, res, next) => {
     });
 };
 
-//Bonus questions for extra functionality (not tested yet)
+//Bonus questions for extra functionality
 exports.getOwners = (req, res, next) => {
   return getOwnerList()
     .then((data) => {
@@ -94,6 +95,22 @@ exports.getOwners = (req, res, next) => {
         return ownerObj.username;
       });
       res.status(200).send(data);
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
+exports.getDesigners = (req, res, next) => {
+  return getDesignerList()
+    .then((data) => {
+      designerArr = [];
+      for (let i = 0; i < data.length; i++) {
+        if (!designerArr.includes(data[i].designer)) {
+          designerArr.push(data[i].designer);
+        }
+      }
+      res.status(200).send({ designers: designerArr });
     })
     .catch((err) => {
       return err;
