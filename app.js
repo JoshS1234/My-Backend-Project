@@ -26,7 +26,9 @@ app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
 
-//Bonus questions for extra functionality
+//Ones that I came back to later
+
+//Bonus questions for extra functionality (during FE project)
 app.get("/api/owners", getOwners);
 app.get("/api/designers", getDesigners);
 
