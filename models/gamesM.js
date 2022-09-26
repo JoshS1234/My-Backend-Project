@@ -179,3 +179,10 @@ exports.deleteCommentFromIDModel = (commentID) => {
       }
     });
 };
+
+//Bonus questions for extra functionality (not tested yet)
+exports.getOwnerList = () => {
+  return db.query("SELECT * FROM users").then((data) => {
+    return data.rows;
+  });
+};

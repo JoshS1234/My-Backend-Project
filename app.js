@@ -9,6 +9,7 @@ const {
   postCommentToReview,
   getReviewListWithCommentCount,
   deleteCommentByID,
+  getOwners,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -23,6 +24,9 @@ app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
 app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
+
+//Bonus questions for extra functionality (not tested yet)
+app.get("/api/owners", getOwners);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {

@@ -2,6 +2,7 @@ const pool = require(`${__dirname}/../db/connection`);
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const { string } = require("pg-format");
 
 const app = require(`${__dirname}/../app`);
 
@@ -565,5 +566,40 @@ describe("GET /api/reviews/:review_id/comments", () => {
     test("Returns a 400 status, if not given an object to attach", () => {
       return request(app).post("/api/reviews/1/comments").expect(404);
     });
+  });
+});
+
+//Bonus questions for extra functionality (not tested yet)
+describe("GET /api/owners", () => {
+  test("returns an array from a get request at this endpoint", () => {
+    return request(app)
+      .get("/api/owners")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toBeInstanceOf(Array);
+      });
+  });
+  test("Elements of array are objects", () => {
+    return request(app)
+      .get("/api/owners")
+      .expect(200)
+      .then((res) => {
+        res.body.forEach((element) => {
+          expect(typeof element).toBe("string");
+        });
+      });
+  });
+  test("Elements of array are objects with the correct properties and types", () => {
+    return request(app)
+      .get("/api/owners")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual([
+          "mallionaire",
+          "philippaclaire9",
+          "bainesface",
+          "dav3rid",
+        ]);
+      });
   });
 });
