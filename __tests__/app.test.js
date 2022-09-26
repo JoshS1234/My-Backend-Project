@@ -569,7 +569,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-//Bonus questions for extra functionality (not tested yet)
+//Bonus questions for extra functionality
 describe("GET /api/owners", () => {
   test("returns an array from a get request at this endpoint", () => {
     return request(app)
