@@ -7,6 +7,7 @@ const {
   postCommentToSpecificReview,
   getReviewListComments,
   deleteCommentFromIDModel,
+  getOwnerList,
 } = require("../models/gamesM.js");
 
 exports.getCategories = (req, res) => {
@@ -82,5 +83,19 @@ exports.deleteCommentByID = (req, res, next) => {
     })
     .catch((err) => {
       next(err);
+    });
+};
+
+//Bonus questions for extra functionality (not tested yet)
+exports.getOwners = (req, res, next) => {
+  return getOwnerList()
+    .then((data) => {
+      data = data.map((ownerObj) => {
+        return ownerObj.username;
+      });
+      res.status(200).send(data);
+    })
+    .catch((err) => {
+      return err;
     });
 };
