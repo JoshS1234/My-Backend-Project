@@ -25,7 +25,7 @@ app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
 
-//Bonus questions for extra functionality (not tested yet)
+//Bonus questions for extra functionality
 app.get("/api/owners", getOwners);
 
 app.use((err, req, res, next) => {
