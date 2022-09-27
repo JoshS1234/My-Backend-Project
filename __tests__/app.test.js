@@ -86,7 +86,6 @@ describe("GET /api/users", () => {
         .get("/api/reviews/1")
         .expect(200)
         .then((res) => {
-          console.log(res.body.reviews);
           let returnedObj = res.body.reviews;
           expect(returnedObj).toHaveProperty("review_id", expect.any(Number));
 
