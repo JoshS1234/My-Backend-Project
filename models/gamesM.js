@@ -27,7 +27,7 @@ exports.getSingleReviewByID = (reviewID) => {
         for (singleReview of reviews) {
           singleReview.comment_count = reviews.length;
         }
-        return { reviews };
+        return { reviews: reviews[0] };
       } else {
         return Promise.reject({
           status: 404,

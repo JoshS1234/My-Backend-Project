@@ -72,13 +72,12 @@ describe("GET /api/users", () => {
   });
 
   describe("GET /api/reviews/:review_id", () => {
-    test("returns an array with length 1", () => {
+    test("returns an object", () => {
       return request(app)
         .get("/api/reviews/1")
         .expect(200)
         .then((res) => {
-          expect(res.body.reviews).toBeInstanceOf(Array);
-          expect(res.body.reviews.length).toBe(1);
+          expect(res.body.reviews).toBeInstanceOf(Object);
         });
     });
 
@@ -87,7 +86,8 @@ describe("GET /api/users", () => {
         .get("/api/reviews/1")
         .expect(200)
         .then((res) => {
-          let returnedObj = res.body.reviews[0];
+          console.log(res.body.reviews);
+          let returnedObj = res.body.reviews;
           expect(returnedObj).toHaveProperty("review_id", expect.any(Number));
 
           expect(returnedObj).toHaveProperty("title", expect.any(String));
@@ -129,12 +129,12 @@ describe("GET /api/users", () => {
         .then((res) => {
           for (key in checker) {
             if (key !== "created_at") {
-              expect(checker[key]).toBe(res.body.reviews[0][key]);
+              expect(checker[key]).toBe(res.body.reviews[key]);
             } else {
-              expect(checker[key]).toEqual(new Date(res.body.reviews[0][key]));
+              expect(checker[key]).toEqual(new Date(res.body.reviews[key]));
             }
           }
-          expect(res.body.reviews[0].comment_count).toBe(1);
+          expect(res.body.reviews.comment_count).toBe(1);
         });
     });
 
@@ -154,7 +154,7 @@ describe("GET /api/users", () => {
       .get("/api/reviews/3")
       .expect(200)
       .then((res) => {
-        expect(res.body.reviews[0]).toHaveProperty("comment_count");
+        expect(res.body.reviews).toHaveProperty("comment_count");
       });
   });
   test("returned object's comment count is a number", () => {
@@ -162,7 +162,7 @@ describe("GET /api/users", () => {
       .get("/api/reviews/3")
       .expect(200)
       .then((res) => {
-        expect(res.body.reviews[0]).toHaveProperty(
+        expect(res.body.reviews).toHaveProperty(
           "comment_count",
           expect.any(Number)
         );
@@ -173,7 +173,7 @@ describe("GET /api/users", () => {
       .get("/api/reviews/1")
       .expect(200)
       .then((res) => {
-        expect(res.body.reviews[0]).toHaveProperty(
+        expect(res.body.reviews).toHaveProperty(
           "comment_count",
           expect.any(Number)
         );
