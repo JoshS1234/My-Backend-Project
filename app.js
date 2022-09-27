@@ -11,6 +11,7 @@ const {
   deleteCommentByID,
   getOwners,
   getDesigners,
+  getCommentsForSpecificReview,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
