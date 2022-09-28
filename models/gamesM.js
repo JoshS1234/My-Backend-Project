@@ -68,7 +68,10 @@ exports.addReviewVotes = (reviewID, voteInc) => {
 
 exports.getCommentsArrayForReview = (reviewID) => {
   return db
-    .query(`SELECT * FROM comments WHERE review_id=$1`, [reviewID])
+    .query(
+      `SELECT * FROM comments WHERE review_id=$1 ORDER BY created_at ASC`,
+      [reviewID]
+    )
     .then((data) => {
       return data.rows;
     });
@@ -159,7 +162,7 @@ exports.postCommentToSpecificReview = (reviewID, objToPost) => {
     )
     .then((uploadedComment) => {
       console.log(uploadedComment.rows[0]);
-      return { comment: uploadedComment.rows[0] };
+      return uploadedComment.rows[0];
     });
 };
 
