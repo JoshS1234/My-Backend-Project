@@ -11,6 +11,9 @@ const {
   getDesignerList,
 } = require("../models/gamesM.js");
 
+const fs = require("fs/promises");
+const { dirname } = require("path");
+
 exports.getCategories = (req, res) => {
   return getCategoryList().then((data) => {
     res.status(200).send(data);
@@ -115,4 +118,11 @@ exports.getDesigners = (req, res, next) => {
     .catch((err) => {
       return err;
     });
+};
+
+exports.getJSONinstructions = (req, res, next) => {
+  return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8").then((data) => {
+    data = JSON.parse(data);
+    res.status(200).send({ data });
+  });
 };
