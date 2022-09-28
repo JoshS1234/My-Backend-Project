@@ -123,6 +123,7 @@ exports.getDesigners = (req, res, next) => {
 exports.getJSONinstructions = (req, res, next) => {
   return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8").then((data) => {
     data = JSON.parse(data);
+    console.log(data);
     res.status(200).send({ data });
   });
 };

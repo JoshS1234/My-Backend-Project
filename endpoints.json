@@ -63,11 +63,14 @@
       ]
     }
   },
-  
+
   "Patch /api/reviews/:review_id": {
     "description": "Allows the user to patch the review with the given ID by increasing the votes by a given number, returns the updated object",
     "exampleRequest": "{inc_votes: 3}",
-    "queries": ["Can query on any of the values in the output object (title, designer, owner, review_img_url, review_body,category, created_at, votes, comment_count", "can also choose the sort order using 'sort_by=asc/desc'"],
+    "queries": [
+      "Can query on any of the values in the output object (title, designer, owner, review_img_url, review_body,category, created_at, votes, comment_count",
+      "can also choose the sort order using 'sort_by=asc/desc'"
+    ],
     "exampleResponse": {
       "reviews": [
         {
@@ -84,55 +87,65 @@
       ]
     }
   },
-  
-  "GET /api/reviews/:review_id/comments" : {"description": "serves an array with the comments relating to a specific review (with the review ID given in the URL)",
+
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves an array with the comments relating to a specific review (with the review ID given in the URL)",
     "queries": [],
     "exampleResponse": {
-      "comments": [{
-        "comment_id": "4",
-        "body": "EPIC board game!",
-        "review_id": "2",
-        "author": "bainesface",
-        "votes": 16,
-        "created_at": "2017-11-22T12:36:03.389Z",
-      },
-    ];
+      "comments": [
+        {
+          "comment_id": "4",
+          "body": "EPIC board game!",
+          "review_id": "2",
+          "author": "bainesface",
+          "votes": 16,
+          "created_at": "2017-11-22T12:36:03.389Z"
+        }
+      ]
     }
   },
-  
-    "POST /api/reviews/:review_id/comments": {"description": "Enables the user to post a comment to a specific review (with the review ID given in the URL). Returns an updated object including a votes count.",
-      "queries": [],
-      "exampleRequest": {"username": "bainesface", "body":"this was good fun!"}
-      "exampleResponse": {
-        "comments": {
-          "username": "mallionaire",
-          "body": "This was decent, not the best not the worst",
-          "votes":"10"
-        }
-      }
-    },
-    
-      "DELETE /api/comments/:comment_id" : {"description": "Enables the user to delete the comment with specific comment ID (given in the URL)",
-        "queries": [],
-        "exampleResponse": {}
-      }
-      ,
-    
-      "GET /api/owners": {"description": "Outputs an array of the comment owners",
-        "queries": [],
-        "exampleResponse": {"owners": ["mallionaire",
-        "philippaclaire9",
-        "bainesface",
-        "dav3rid"]}
-    },
 
-    "GET /api/designers": {"description": "Outputs an array of the game designers",
-        "queries": [],
-        "exampleResponse": {"owners": ["Uwe Rosenberg",
+  "POST /api/reviews/:review_id/comments": {
+    "description": "Enables the user to post a comment to a specific review (with the review ID given in the URL). Returns an updated object including a votes count.",
+    "queries": [],
+    "exampleRequest": {
+      "username": "bainesface",
+      "body": "this was good fun!"
+    },
+    "exampleResponse": {
+      "comments": {
+        "username": "mallionaire",
+        "body": "This was decent, not the best not the worst",
+        "votes": "10"
+      }
+    }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "Enables the user to delete the comment with specific comment ID (given in the URL)",
+    "queries": [],
+    "exampleResponse": {}
+  },
+
+  "GET /api/owners": {
+    "description": "Outputs an array of the comment owners",
+    "queries": [],
+    "exampleResponse": {
+      "owners": ["mallionaire", "philippaclaire9", "bainesface", "dav3rid"]
+    }
+  },
+
+  "GET /api/designers": {
+    "description": "Outputs an array of the game designers",
+    "queries": [],
+    "exampleResponse": {
+      "owners": [
+        "Uwe Rosenberg",
         "Leslie Scott",
         "Akihisa Okui",
         "Gamey McGameface",
-        "Seymour Buttz"]}
+        "Seymour Buttz"
+      ]
     }
-      
+  }
 }
