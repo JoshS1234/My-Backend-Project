@@ -11,6 +11,7 @@ const {
   deleteCommentByID,
   getOwners,
   getDesigners,
+  getJSONinstructions,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/api/reviews/:review_id/comments", getCommentsFromReview);
 app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
+app.get("/api", getJSONinstructions);
 
 //Ones that I came back to later
 
