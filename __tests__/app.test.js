@@ -544,9 +544,9 @@ describe("POST /api/reviews/:review_id/comments", () => {
     return request(app).post("/api/reviews/1/comments").expect(404);
   });
 
-  test("Quick checker", () => {
+  test.only("Quick checker", () => {
     return request(app)
-      .post("api/reviews/13/comments")
+      .post("/api/reviews/13/comments")
       .send({ username: "mallionaire", body: "a" })
       .expect(201);
   });

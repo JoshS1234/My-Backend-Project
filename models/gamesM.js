@@ -158,7 +158,8 @@ exports.postCommentToSpecificReview = (reviewID, objToPost) => {
       [reviewID, objToPost.username, objToPost.body]
     )
     .then((uploadedComment) => {
-      return uploadedComment.rows[0];
+      console.log(uploadedComment.rows[0]);
+      return { comment: uploadedComment.rows[0] };
     });
 };
 
