@@ -69,7 +69,7 @@ exports.addReviewVotes = (reviewID, voteInc) => {
 exports.getCommentsArrayForReview = (reviewID) => {
   return db
     .query(
-      `SELECT * FROM comments WHERE review_id=$1 ORDER BY created_at ASC`,
+      `SELECT * FROM comments WHERE review_id=$1 ORDER BY created_at DESC`,
       [reviewID]
     )
     .then((data) => {
