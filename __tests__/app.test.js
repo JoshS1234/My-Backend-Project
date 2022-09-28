@@ -442,7 +442,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .send(inputObj)
       .expect(201);
   });
-  test("returns a 201 status, with an attached object (with correct keys", () => {
+  test("returns a 201 status, with an attached object (with correct keys)", () => {
     const inputObj = {
       username: "mallionaire",
       body: "This was decent, not the best not the worst",
@@ -543,9 +543,16 @@ describe("POST /api/reviews/:review_id/comments", () => {
   test("Returns a 404 status, if not given an object to attach", () => {
     return request(app).post("/api/reviews/1/comments").expect(404);
   });
+
+  test("Quick checker", () => {
+    return request(app)
+      .post("api/reviews/13/comments")
+      .send({ username: "mallionaire", body: "a" })
+      .expect(201);
+  });
 });
 
-describe("api delete comment by ID", () => {
+describe("api DELETE comment by ID", () => {
   test("returns 204 status and empty body", () => {
     return request(app)
       .delete("/api/comments/1")
