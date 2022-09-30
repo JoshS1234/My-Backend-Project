@@ -49,11 +49,15 @@ exports.patchReviewVotesByID = (req, res, next) => {
     });
 };
 
-exports.getCommentsFromReview = (req, res) => {
+exports.getCommentsFromReview = (req, res, next) => {
   let reviewID = req.params.review_id;
-  return getCommentsArrayForReview(reviewID).then((data) => {
-    res.status(200).send({ comments: data });
-  });
+  return getCommentsArrayForReview(reviewID)
+    .then((data) => {
+      res.status(200).send({ comments: data });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.postCommentToReview = (req, res, next) => {
