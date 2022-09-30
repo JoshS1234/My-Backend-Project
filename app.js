@@ -17,7 +17,7 @@ const {
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+console.log("hello");
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
