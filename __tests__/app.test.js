@@ -136,8 +136,8 @@ describe("GET /api/users", () => {
         });
     });
 
-    test("returns a 400 error if a review ID is requested that doesn't exist (non integer review ID)", () => {
-      return request(app).get("/api/reviews/blahhhash").expect(400);
+    test("Check returns a 400 error if a review ID is requested that doesn't exist (non integer review ID)", () => {
+      return request(app).get("/api/reviews/1000blahhhash").expect(400);
     });
 
     test("returns a 404 error if a review ID is requested that doesn't exist (numerical ID requested, but doesn't exist in the data)", () => {
