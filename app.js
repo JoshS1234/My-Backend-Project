@@ -12,15 +12,12 @@ const {
   getOwners,
   getDesigners,
   getJSONinstructions,
+  getIntroduction,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-const getIntroduction = () => {
-  return "{msg:`Hello`}";
-};
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);

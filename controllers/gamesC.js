@@ -12,7 +12,6 @@ const {
 } = require("../models/gamesM.js");
 
 const fs = require("fs/promises");
-const { dirname } = require("path");
 
 exports.getCategories = (req, res) => {
   return getCategoryList().then((data) => {
@@ -127,7 +126,15 @@ exports.getDesigners = (req, res, next) => {
 exports.getJSONinstructions = (req, res, next) => {
   return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8").then((data) => {
     data = JSON.parse(data);
-    console.log(data);
+    res.status(200).send({ data });
+  });
+};
+
+exports.getIntroduction = (req, res, next) => {
+  return Promise.all([]).then((data) => {
+    data = {
+      msg: "use /api in order to get the instructions for different endpoints for the backend API",
+    };
     res.status(200).send({ data });
   });
 };
