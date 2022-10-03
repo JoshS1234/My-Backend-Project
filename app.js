@@ -12,6 +12,7 @@ const {
   getOwners,
   getDesigners,
   getJSONinstructions,
+  getIntroduction,
 } = require(`${__dirname}/controllers/gamesC`);
 
 const app = express();
@@ -27,6 +28,7 @@ app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
 app.get("/api", getJSONinstructions);
+app.get("/", getIntroduction);
 
 //Ones that I came back to later
 
