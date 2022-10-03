@@ -18,6 +18,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const getIntroduction = () => {
+  return "{msg:`Hello`}";
+};
+
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewVotesByID);
@@ -27,6 +31,7 @@ app.post("/api/reviews/:review_id/comments", postCommentToReview);
 app.get("/api/reviews", getReviewListWithCommentCount);
 app.delete("/api/comments/:comment_id", deleteCommentByID);
 app.get("/api", getJSONinstructions);
+app.get("/", getIntroduction);
 
 //Ones that I came back to later
 
